@@ -1,10 +1,22 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { VideoEditorPlugin } from './definitions';
+import type {
+  EditOptions,
+  MediaFileResult,
+  ThumbnailOptions,
+  VideoEditorPlugin,
+} from './definitions';
 
 export class VideoEditorWeb extends WebPlugin implements VideoEditorPlugin {
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+  edit(options: EditOptions): Promise<MediaFileResult> {
+    console.log('edit', options);
+
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  thumbnail(options: ThumbnailOptions): Promise<MediaFileResult> {
+    console.log('thumbnail', options);
+
+    throw this.unimplemented('Not implemented on web.');
   }
 }
