@@ -16,6 +16,8 @@
 		50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ADFFA52020D75100D50D53 /* Capacitor.framework */; };
 		50ADFFA82020EE4F00D50D53 /* VideoEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 50ADFFA72020EE4F00D50D53 /* VideoEditorPlugin.m */; };
 		50E1A94820377CB70090CE1A /* VideoEditorPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E1A94720377CB70090CE1A /* VideoEditorPlugin.swift */; };
+		905C6E29270DF1A200669873 /* NextLevelSessionExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905C6E27270DF1A200669873 /* NextLevelSessionExporter.swift */; };
+		905C6E2A270DF1A200669873 /* NextLevelSessionExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 905C6E28270DF1A200669873 /* NextLevelSessionExporter.h */; };
 		907FE3D8270DBB6D00DA8F5D /* TrimSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FE3D6270DBB6D00DA8F5D /* TrimSettings.swift */; };
 		907FE3D9270DBB6D00DA8F5D /* TranscodeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907FE3D7270DBB6D00DA8F5D /* TranscodeSettings.swift */; };
 /* End PBXBuildFile section */
@@ -43,6 +45,8 @@
 		50ADFFA72020EE4F00D50D53 /* VideoEditorPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoEditorPlugin.m; sourceTree = "<group>"; };
 		50E1A94720377CB70090CE1A /* VideoEditorPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoEditorPlugin.swift; sourceTree = "<group>"; };
 		5E23F77F099397094342571A /* Pods-Plugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Plugin.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Plugin/Pods-Plugin.debug.xcconfig"; sourceTree = "<group>"; };
+		905C6E27270DF1A200669873 /* NextLevelSessionExporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NextLevelSessionExporter.swift; sourceTree = "<group>"; };
+		905C6E28270DF1A200669873 /* NextLevelSessionExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextLevelSessionExporter.h; sourceTree = "<group>"; };
 		907FE3D6270DBB6D00DA8F5D /* TrimSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrimSettings.swift; sourceTree = "<group>"; };
 		907FE3D7270DBB6D00DA8F5D /* TranscodeSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranscodeSettings.swift; sourceTree = "<group>"; };
 		91781294A431A2A7CC6EB714 /* Pods-Plugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Plugin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Plugin/Pods-Plugin.release.xcconfig"; sourceTree = "<group>"; };
@@ -96,6 +100,8 @@
 		50ADFF8A201F53D600D50D53 /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				905C6E28270DF1A200669873 /* NextLevelSessionExporter.h */,
+				905C6E27270DF1A200669873 /* NextLevelSessionExporter.swift */,
 				907FE3D7270DBB6D00DA8F5D /* TranscodeSettings.swift */,
 				907FE3D6270DBB6D00DA8F5D /* TrimSettings.swift */,
 				50E1A94720377CB70090CE1A /* VideoEditorPlugin.swift */,
@@ -144,6 +150,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				905C6E2A270DF1A200669873 /* NextLevelSessionExporter.h in Headers */,
 				50ADFF99201F53D600D50D53 /* VideoEditorPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -317,6 +324,7 @@
 				907FE3D9270DBB6D00DA8F5D /* TranscodeSettings.swift in Sources */,
 				2F98D68224C9AAE500613A4C /* VideoEditor.swift in Sources */,
 				50ADFFA82020EE4F00D50D53 /* VideoEditorPlugin.m in Sources */,
+				905C6E29270DF1A200669873 /* NextLevelSessionExporter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

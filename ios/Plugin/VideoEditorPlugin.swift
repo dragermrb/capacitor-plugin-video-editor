@@ -30,7 +30,7 @@ public class VideoEditorPlugin: CAPPlugin {
                 height: (transcode["height"] ?? 0) as! Int,
                 width: (transcode["width"] ?? 0) as! Int,
                 keepAspectRatio: (transcode["keepAspectRatio"] ?? true) as! Bool,
-                codec: ""
+                codec: "" // TODO: Not supported
             );
             
             let outFile = self.getDestVideoUrl();
