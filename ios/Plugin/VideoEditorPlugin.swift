@@ -11,7 +11,7 @@ public class VideoEditorPlugin: CAPPlugin {
     private let implementation = VideoEditor()
     
     @objc func edit(_ call: CAPPluginCall) {
-        let path = call.getString("path");
+        let path = call.getString("path")?.replacingOccurrences(of: "file://", with: "");
         let trim = call.getObject("trim") ?? JSObject();
         let transcode = call.getObject("transcode") ?? JSObject();
         
@@ -22,8 +22,8 @@ public class VideoEditorPlugin: CAPPlugin {
         
         do {
             let trimSettings = try TrimSettings(
-                startsAt: (trim["startsAt"] ?? 0) as! Int ,
-                endsAt: (trim["endsAt"] ?? 0) as! Int
+                startsAt: (trim["startsAt"] ?? 0.0) as! Double,
+                endsAt: (trim["endsAt"] ?? 0.0) as! Double
             );
             
             let transcodeSettings = try TranscodeSettings(
