@@ -22,13 +22,12 @@ import UIKit
             : avAsset.duration
         let duration = min((end - start), (avAsset.duration - start))
         let range = CMTimeRangeMake(start: start, duration: duration)
-        let maintainAspectRatio = true
         
         let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).first!
         let mediaSize = videoTrack.naturalSize
         
         var videoWidth = videoTrack.naturalSize.width
-        var videoHeight = videoTrack.naturalSize.width
+        var videoHeight = videoTrack.naturalSize.height
         
         // Desired size
         let outWidth = transcodeSettings.getWidth() != 0 ? CGFloat(transcodeSettings.getWidth()) : videoWidth
@@ -38,68 +37,43 @@ import UIKit
         var newWidth = outWidth
         var newHeight = outHeight
         
-        if (maintainAspectRatio) {
-            var aspectRatio = videoWidth / videoHeight;
-            
-            // for some portrait videos ios gives the wrong width and height, this fixes that
-            let videoOrientation = self.getOrientationForTrack(avAsset: avAsset)
-            if (videoOrientation  == "portrait") {
-                if (videoWidth > videoHeight) {
-                    videoWidth = mediaSize.height;
-                    videoHeight = mediaSize.width;
-                    aspectRatio = videoWidth / videoHeight;
-                }
+        var aspectRatio = videoWidth / videoHeight;
+        
+        // for some portrait videos ios gives the wrong width and height, this fixes that
+        let videoOrientation = self.getOrientationForTrack(avAsset: avAsset)
+        if (videoOrientation == "portrait") {
+            if (videoWidth > videoHeight) {
+                videoWidth = mediaSize.height;
+                videoHeight = mediaSize.width;
+                aspectRatio = videoWidth / videoHeight;
             }
-            
-            newWidth = (outWidth != 0 && outHeight != 0) ? outHeight * aspectRatio : videoWidth;
-            newHeight = (outWidth != 0 && outHeight != 0) ? newWidth / aspectRatio : videoHeight;
-        } else {
-            newWidth = (outWidth != 0 && outHeight != 0) ? outWidth : videoWidth;
-            newHeight = (outWidth != 0 && outHeight != 0) ? outHeight : videoHeight;
         }
         
-        let exporter = NextLevelSessionExporter(withAsset: avAsset)
+        newWidth = (outWidth != 0 && outHeight != 0) ? outHeight * aspectRatio : videoWidth;
+        newHeight = (outWidth != 0 && outHeight != 0) ? newWidth / aspectRatio : videoHeight;
+        
+        // Exporter
+        let exporter = SimpleSessionExporter(withAsset: avAsset)
         exporter.outputFileType = AVFileType.mp4
         exporter.outputURL = outFile
         exporter.timeRange = range
         
-        let compressionDict: [String: Any] = [
-            AVVideoAverageBitRateKey: NSNumber(integerLiteral: 6000000),
-            AVVideoProfileLevelKey: AVVideoProfileLevelH264HighAutoLevel as String,
-        ]
         exporter.videoOutputConfiguration = [
-            AVVideoCodecKey: AVVideoCodecType.h264,
             AVVideoWidthKey: NSNumber(integerLiteral: Int(newWidth)),
             AVVideoHeightKey: NSNumber(integerLiteral: Int(newHeight)),
-            AVVideoScalingModeKey: AVVideoScalingModeResizeAspectFill,
-            AVVideoCompressionPropertiesKey: compressionDict
-        ]
-        exporter.audioOutputConfiguration = [
-            AVFormatIDKey: kAudioFormatMPEG4AAC,
-            AVEncoderBitRateKey: NSNumber(integerLiteral: 128000),
-            AVNumberOfChannelsKey: NSNumber(integerLiteral: 2),
-            AVSampleRateKey: NSNumber(value: Float(44100))
         ]
         
         exporter.export(
-            progressHandler: { (progress) in
-                progressHandler(progress)
-            },
-            completionHandler: { result in
-                switch result {
-                case .success(let status):
-                    switch status {
-                    case .completed:
-                        completionHandler(exporter.outputURL!)
-                        break
-                    default:
-                        errorHandler("Transcode did not complete")
-                        break
-                    }
+            completionHandler: { status in                
+                switch status {
+                case .completed:
+                    completionHandler(exporter.outputURL!)
                     break
-                case .failure(let error):
-                    errorHandler("Failed to transcode: \(error)")
+                case .failed:
+                    errorHandler("Failed to transcode")
                     break
+                default:
+                    errorHandler("Unknow export status: \(status)")
                 }
             }
         )
@@ -170,7 +144,7 @@ import UIKit
         let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).first!
         let size = videoTrack.naturalSize
         let txf = videoTrack.preferredTransform
-
+        
         if (size.width == txf.tx && size.height == txf.ty) {
             return "landscape";
         } else if (txf.tx == 0 && txf.ty == 0) {
@@ -178,7 +152,7 @@ import UIKit
         } else if (txf.tx == 0 && txf.ty == size.width) {
             return "portrait";
         }
-
+        
         return "portrait";
     }
 }
