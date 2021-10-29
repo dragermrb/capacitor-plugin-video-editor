@@ -91,27 +91,15 @@ public class VideoEditorPlugin: CAPPlugin {
     }
     
     func getDestVideoUrl() -> URL {
-        var url: URL
-        var counter = 0;
-        
-        repeat {
-            counter += 1
-            url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("vid-\(counter).mp4")
-        } while FileManager.default.fileExists(atPath: url.path)
-        
-        return url
+        return URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent(NSUUID().uuidString)
+            .appendingPathExtension("mp4")
     }
     
     func getDestImageUrl() -> URL {
-        var url: URL
-        var counter = 0;
-        
-        repeat {
-            counter += 1
-            url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("th-\(counter).jpg")
-        } while FileManager.default.fileExists(atPath: url.path)
-        
-        return url
+        return URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent(NSUUID().uuidString)
+            .appendingPathExtension("jpg")
     }
     
     func createMediaFile(url: URL) -> JSObject {
