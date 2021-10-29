@@ -6,10 +6,10 @@ enum TrimSettingsError: Error {
 
 public class TrimSettings: NSObject
 {
-    private var startsAt: Int = 0;
-    private var endsAt: Int = 0;
+    private var startsAt: Double = 0;
+    private var endsAt: Double = 0;
     
-    init(startsAt: Int, endsAt: Int) throws
+    init(startsAt: Double, endsAt: Double) throws
     {
         if (startsAt < 0)
         {
@@ -23,12 +23,12 @@ public class TrimSettings: NSObject
         self.endsAt = endsAt;
     }
     
-    func getStartsAt()->Int
+    func getStartsAt()->Double
     {
         return self.startsAt;
     }
     
-    func setStartsAt(_ startsAt: Int) throws
+    func setStartsAt(_ startsAt: Double) throws
     {
         if (startsAt < 0)
         {
@@ -37,12 +37,12 @@ public class TrimSettings: NSObject
         self.startsAt = startsAt;
     }
     
-    func getEndsAt()->Int
+    func getEndsAt()->Double
     {
         return self.endsAt;
     }
     
-    func setEndsAt(_ endsAt: Int) throws
+    func setEndsAt(_ endsAt: Double) throws
     {
         if (endsAt < 0)
         {
