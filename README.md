@@ -5,7 +5,7 @@ Capacitor plugin to edit videos
 ## Install
 
 ```bash
-npm install capacitor-plugin-video-editor
+npm install @whiteguru/capacitor-plugin-video-editor
 npx cap sync
 ```
 
@@ -13,10 +13,10 @@ npx cap sync
 
 <docgen-index>
 
-* [`edit(...)`](#edit)
-* [`thumbnail(...)`](#thumbnail)
-* [`addListener(...)`](#addlistener)
-* [Interfaces](#interfaces)
+- [`edit(...)`](#edit)
+- [`thumbnail(...)`](#thumbnail)
+- [`addListener(...)`](#addlistener)
+- [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -35,8 +35,7 @@ edit(options: EditOptions) => any
 
 **Returns:** <code>any</code>
 
---------------------
-
+---
 
 ### thumbnail(...)
 
@@ -50,8 +49,7 @@ thumbnail(options: ThumbnailOptions) => any
 
 **Returns:** <code>any</code>
 
---------------------
-
+---
 
 ### addListener(...)
 
@@ -66,11 +64,9 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 
 **Returns:** <code>any</code>
 
---------------------
-
+---
 
 ### Interfaces
-
 
 #### EditOptions
 
@@ -80,13 +76,11 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`trim`**      | <code>{ startsAt?: number; endsAt?: number; }</code>                         |
 | **`transcode`** | <code>{ height?: number; width?: number; keepAspectRatio?: boolean; }</code> |
 
-
 #### MediaFileResult
 
 | Prop       | Type                                            |
 | ---------- | ----------------------------------------------- |
 | **`file`** | <code><a href="#mediafile">MediaFile</a></code> |
-
 
 #### MediaFile
 
@@ -97,7 +91,6 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`type`** | <code>string</code> | The file's mime type                            |
 | **`size`** | <code>number</code> | The size of the file, in bytes.                 |
 
-
 #### ThumbnailOptions
 
 | Prop         | Type                |
@@ -107,13 +100,11 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`width`**  | <code>number</code> |
 | **`height`** | <code>number</code> |
 
-
 #### ProgressInfo
 
 | Prop           | Type                |
 | -------------- | ------------------- |
 | **`progress`** | <code>number</code> |
-
 
 #### PluginListenerHandle
 
