@@ -1,5 +1,5 @@
 # node files
-#dist # Add 'dist' folder to repo to allow install plugin from github
+dist
 node_modules
 
 # iOS files
