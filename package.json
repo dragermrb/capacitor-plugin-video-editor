@@ -11,7 +11,7 @@
     "android/build.gradle",
     "dist/",
     "ios/Plugin/",
-    "CapacitorPluginVideoEditor.podspec"
+    "WhiteguruCapacitorPluginVideoEditor.podspec"
   ],
   "author": "Manuel Rodríguez",
   "license": "MIT",
