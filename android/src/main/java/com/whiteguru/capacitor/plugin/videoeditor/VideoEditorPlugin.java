@@ -3,7 +3,6 @@ package com.whiteguru.capacitor.plugin.videoeditor;
 import android.Manifest;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Logger;
@@ -26,7 +25,7 @@ import java.util.Locale;
         name = "VideoEditor",
         permissions = {
                 @Permission(
-                        strings = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        strings = {Manifest.permission.READ_EXTERNAL_STORAGE},
                         alias = VideoEditorPlugin.STORAGE
                 )
         }
@@ -61,7 +60,7 @@ public class VideoEditorPlugin extends Plugin {
 
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
             String fileName = "VID_" + timeStamp + "_";
-            File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+            File storageDir = getContext().getCacheDir();
 
             execute(
                     () -> {
@@ -129,11 +128,10 @@ public class VideoEditorPlugin extends Plugin {
 
         if (checkStoragePermissions(call)) {
             Uri inputUri = Uri.parse(path);
-            File inputFile = new File(inputUri.getPath());
 
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
             String fileName = "TH_" + timeStamp + "_";
-            File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+            File storageDir = getContext().getCacheDir();
 
             File outputFile = null;
 
@@ -142,7 +140,7 @@ public class VideoEditorPlugin extends Plugin {
 
                 VideoEditor implementation = new VideoEditor();
 
-                implementation.thumbnail(inputFile, outputFile, at, width, height);
+                implementation.thumbnail(this.getContext(), inputUri, outputFile, at, width, height);
             } catch (IOException e) {
                 call.reject(e.getMessage());
                 return;

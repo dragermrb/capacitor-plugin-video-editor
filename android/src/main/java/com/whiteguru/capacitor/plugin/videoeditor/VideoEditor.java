@@ -1,7 +1,9 @@
 package com.whiteguru.capacitor.plugin.videoeditor;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 
 import com.otaliastudios.transcoder.Transcoder;
 import com.otaliastudios.transcoder.TranscoderListener;
@@ -68,14 +70,14 @@ public class VideoEditor {
                 .setListener(listenerListener).transcode();
     }
 
-    public void thumbnail(File srcFile, File outFile, int at, int width, int height) throws IOException {
+    public void thumbnail(Context context, Uri srcUri, File outFile, int at, int width, int height) throws IOException {
 
         int quality = 80;
 
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(srcFile.getAbsolutePath());
+        mmr.setDataSource(context, srcUri);
 
-        Bitmap bitmap = mmr.getFrameAtTime(at * 1000 * 1000);
+        Bitmap bitmap = mmr.getFrameAtTime((long) at * 1000 * 1000);
 
         if (width > 0 || height > 0) {
             int videoWidth = bitmap.getWidth();
