@@ -1,16 +1,15 @@
 package com.whiteguru.capacitor.plugin.videoeditor;
 
 public class TranscodeSettings {
+
     private int height = 0;
     private int width = 0;
     private boolean keepAspectRatio = true;
-    private String codec = "";
-
 
     public TranscodeSettings() {
     }
 
-    public TranscodeSettings(int height, int width, boolean keepAspectRatio, String codec) {
+    public TranscodeSettings(int height, int width, boolean keepAspectRatio) {
         if (height < 0) {
             throw new IllegalArgumentException("Parameter height cannot be negative");
         }
@@ -22,7 +21,6 @@ public class TranscodeSettings {
         this.height = height;
         this.width = width;
         this.keepAspectRatio = keepAspectRatio;
-        this.codec = codec;
     }
 
     public int getHeight() {
@@ -55,13 +53,5 @@ public class TranscodeSettings {
 
     public void setKeepAspectRatio(boolean keepAspectRatio) {
         this.keepAspectRatio = keepAspectRatio;
-    }
-
-    public String getCodec() {
-        return codec;
-    }
-
-    public void setCodec(String codec) {
-        this.codec = codec;
     }
 }

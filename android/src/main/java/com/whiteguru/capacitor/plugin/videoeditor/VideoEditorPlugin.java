@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Logger;
 import com.getcapacitor.PermissionState;
@@ -13,13 +16,18 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
+
 import com.otaliastudios.transcoder.TranscoderListener;
+
+import com.linkedin.android.litr.analytics.TrackTransformationInfo;
+import com.linkedin.android.litr.TransformationListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.List;
 
 @CapacitorPlugin(
         name = "VideoEditor",
@@ -40,6 +48,10 @@ public class VideoEditorPlugin extends Plugin {
 
     @PluginMethod
     public void edit(PluginCall call) {
+        editLitr(call);
+    }
+
+    public void editLitr(PluginCall call) {
         String path = call.getString("path");
         JSObject trim = call.getObject("trim", new JSObject());
         JSObject transcode = call.getObject("transcode", new JSObject());
@@ -67,15 +79,101 @@ public class VideoEditorPlugin extends Plugin {
                         try {
                             File outputFile = File.createTempFile(fileName, ".mp4", storageDir);
 
-                            VideoEditor implementation = new VideoEditor();
+                            VideoEditorLitr implementation = new VideoEditorLitr();
 
                             TrimSettings trimSettings = new TrimSettings(trim.getInteger("startsAt", 0), trim.getInteger("endsAt", 0));
 
                             TranscodeSettings transcodeSettings = new TranscodeSettings(
                                     transcode.getInteger("height", 0),
                                     transcode.getInteger("width", 0),
-                                    transcode.getBoolean("keepAspectRatio", true),
-                                    ""
+                                    transcode.getBoolean("keepAspectRatio", true)
+                            );
+
+                            TransformationListener videoTransformationListener = new TransformationListener() {
+                                @Override
+                                public void onStarted(@NonNull String id) {
+                                    Logger.debug("Transcode started");
+                                }
+
+                                @Override
+                                public void onProgress(@NonNull String id, float progress) {
+                                    Logger.debug("Transcode running " + progress);
+
+                                    JSObject ret = new JSObject();
+                                    ret.put("progress", progress);
+
+                                    notifyListeners("transcodeProgress", ret);
+                                }
+
+                                @Override
+                                public void onCompleted(@NonNull String id, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
+                                    Logger.debug("Transcode completed");
+
+                                    JSObject ret = new JSObject();
+                                    ret.put("file", createMediaFile(outputFile));
+                                    call.resolve(ret);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull String id, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
+                                    Logger.debug("Transcode cancelled");
+
+                                    call.reject("Transcode canceled");
+                                }
+
+                                @Override
+                                public void onError(@NonNull String id, @Nullable Throwable cause, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
+                                    Logger.debug("Transcode error: " + (cause != null ? cause.getMessage() : ""));
+
+                                    call.reject("Transcode failed: " + (cause != null ? cause.getMessage() : ""));
+                                }
+                            };
+
+                            implementation.edit(getContext(), inputFile, outputFile, trimSettings, transcodeSettings, videoTransformationListener);
+                        } catch (IOException e) {
+                            call.reject(e.getMessage());
+                        }
+                    }
+            );
+        }
+    }
+
+    public void editOtaliastudio(PluginCall call) {
+        String path = call.getString("path");
+        JSObject trim = call.getObject("trim", new JSObject());
+        JSObject transcode = call.getObject("transcode", new JSObject());
+
+        if (path == null) {
+            call.reject("Input file path is required");
+            return;
+        }
+
+        if (checkStoragePermissions(call)) {
+            Uri inputUri = Uri.parse(path);
+            File inputFile = new File(inputUri.getPath());
+
+            if (!inputFile.canRead()) {
+                call.reject("Cannot read input file: " + inputFile.getAbsolutePath());
+                return;
+            }
+
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
+            String fileName = "VID_" + timeStamp + "_";
+            File storageDir = getContext().getCacheDir();
+
+            execute(
+                    () -> {
+                        try {
+                            File outputFile = File.createTempFile(fileName, ".mp4", storageDir);
+
+                            VideoEditorOtaliastudios implementation = new VideoEditorOtaliastudios();
+
+                            TrimSettings trimSettings = new TrimSettings(trim.getInteger("startsAt", 0), trim.getInteger("endsAt", 0));
+
+                            TranscodeSettings transcodeSettings = new TranscodeSettings(
+                                    transcode.getInteger("height", 0),
+                                    transcode.getInteger("width", 0),
+                                    transcode.getBoolean("keepAspectRatio", true)
                             );
 
                             TranscoderListener listenerListener = new TranscoderListener() {
@@ -138,7 +236,7 @@ public class VideoEditorPlugin extends Plugin {
             try {
                 outputFile = File.createTempFile(fileName, ".jpg", storageDir);
 
-                VideoEditor implementation = new VideoEditor();
+                VideoEditorLitr implementation = new VideoEditorLitr();
 
                 implementation.thumbnail(this.getContext(), inputUri, outputFile, at, width, height);
             } catch (IOException e) {
