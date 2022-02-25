@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class VideoEditor {
+public class VideoEditorOtaliastudios {
     public void edit(File srcFile, File outFile, TrimSettings trimSettings, TranscodeSettings transcodeSettings, TranscoderListener listenerListener) throws IOException {
         DataSource source = new FilePathDataSource(srcFile.getAbsolutePath());
         source.initialize();
@@ -29,8 +29,8 @@ public class VideoEditor {
             throw new IllegalArgumentException("Input video with 0 duration");
         }
 
-        long startsAtUs = trimSettings.getStartsAt() * 1000 * 1000;
-        long endsAtUs = trimSettings.getEndsAt() == 0 ? durationUs : Math.min(durationUs, trimSettings.getEndsAt() * 1000 * 1000);
+        long startsAtUs = trimSettings.getStartsAt() * 1000;
+        long endsAtUs = trimSettings.getEndsAt() == 0 ? durationUs : Math.min(durationUs, trimSettings.getEndsAt() * 1000);
 
         DataSource clip = new ClipDataSource(
                 source,

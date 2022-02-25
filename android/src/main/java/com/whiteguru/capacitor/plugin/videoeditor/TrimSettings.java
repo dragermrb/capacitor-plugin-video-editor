@@ -20,6 +20,10 @@ public class TrimSettings {
         this.endsAt = endsAt;
     }
 
+    /**
+     * Get startsAt in miliSeconds
+     * @return startsAt in miliSeconds
+     */
     public long getStartsAt() {
         return startsAt;
     }
@@ -32,6 +36,10 @@ public class TrimSettings {
         this.startsAt = startsAt;
     }
 
+    /**
+     * Get endsAt in miliSeconds
+     * @return endsAt in miliSeconds
+     */
     public long getEndsAt() {
         return endsAt;
     }
