@@ -17,8 +17,6 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
 
-import com.otaliastudios.transcoder.TranscoderListener;
-
 import com.linkedin.android.litr.analytics.TrackTransformationInfo;
 import com.linkedin.android.litr.TransformationListener;
 
@@ -130,80 +128,6 @@ public class VideoEditorPlugin extends Plugin {
                             };
 
                             implementation.edit(getContext(), inputFile, outputFile, trimSettings, transcodeSettings, videoTransformationListener);
-                        } catch (IOException e) {
-                            call.reject(e.getMessage());
-                        }
-                    }
-            );
-        }
-    }
-
-    public void editOtaliastudio(PluginCall call) {
-        String path = call.getString("path");
-        JSObject trim = call.getObject("trim", new JSObject());
-        JSObject transcode = call.getObject("transcode", new JSObject());
-
-        if (path == null) {
-            call.reject("Input file path is required");
-            return;
-        }
-
-        if (checkStoragePermissions(call)) {
-            Uri inputUri = Uri.parse(path);
-            File inputFile = new File(inputUri.getPath());
-
-            if (!inputFile.canRead()) {
-                call.reject("Cannot read input file: " + inputFile.getAbsolutePath());
-                return;
-            }
-
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
-            String fileName = "VID_" + timeStamp + "_";
-            File storageDir = getContext().getCacheDir();
-
-            execute(
-                    () -> {
-                        try {
-                            File outputFile = File.createTempFile(fileName, ".mp4", storageDir);
-
-                            VideoEditorOtaliastudios implementation = new VideoEditorOtaliastudios();
-
-                            TrimSettings trimSettings = new TrimSettings(trim.getInteger("startsAt", 0), trim.getInteger("endsAt", 0));
-
-                            TranscodeSettings transcodeSettings = new TranscodeSettings(
-                                    transcode.getInteger("height", 0),
-                                    transcode.getInteger("width", 0),
-                                    transcode.getBoolean("keepAspectRatio", true)
-                            );
-
-                            TranscoderListener listenerListener = new TranscoderListener() {
-                                public void onTranscodeProgress(double progress) {
-                                    Logger.debug("transcode running " + progress);
-
-                                    JSObject ret = new JSObject();
-                                    ret.put("progress", progress);
-
-                                    notifyListeners("transcodeProgress", ret);
-                                }
-
-                                public void onTranscodeCompleted(int successCode) {
-                                    JSObject ret = new JSObject();
-                                    ret.put("file", createMediaFile(outputFile));
-                                    call.resolve(ret);
-                                }
-
-                                public void onTranscodeCanceled() {
-                                    call.reject("transcode canceled");
-                                }
-
-                                public void onTranscodeFailed(Throwable exception) {
-                                    Logger.debug("transcode exception: " + exception.getMessage());
-
-                                    call.reject("transcode failed: " + exception.getMessage());
-                                }
-                            };
-
-                            implementation.edit(inputFile, outputFile, trimSettings, transcodeSettings, listenerListener);
                         } catch (IOException e) {
                             call.reject(e.getMessage());
                         }
