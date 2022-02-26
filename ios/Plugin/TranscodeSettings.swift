@@ -9,9 +9,8 @@ public class TranscodeSettings: NSObject
     private var height: Int = 0;
     private var width: Int = 0;
     private var keepAspectRatio: Bool = true;
-    private var codec: String = "";
     
-    init(height: Int, width: Int, keepAspectRatio: Bool, codec: String) throws
+    init(height: Int, width: Int, keepAspectRatio: Bool) throws
     {
         if (height < 0)
         {
@@ -24,7 +23,6 @@ public class TranscodeSettings: NSObject
         self.height = height;
         self.width = width;
         self.keepAspectRatio = keepAspectRatio;
-        self.codec = codec;
     }
     
     func getHeight()->Int
@@ -63,15 +61,5 @@ public class TranscodeSettings: NSObject
     func setKeepAspectRatio(_ keepAspectRatio: Bool)
     {
         self.keepAspectRatio = keepAspectRatio;
-    }
-    
-    func getCodec()->String?
-    {
-        return self.codec;
-    }
-    
-    func setCodec(_ codec: String)
-    {
-        self.codec = codec;
     }
 }

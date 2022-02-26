@@ -16,41 +16,19 @@ import UIKit
         errorHandler: @escaping (String) -> ()
     ) {
         let avAsset = AVURLAsset(url: srcFile, options: nil)
-        let start = CMTimeMakeWithSeconds(Float64(trimSettings.getStartsAt()), preferredTimescale: 1)
-        let end = trimSettings.getEndsAt() > 0
-            ? CMTimeMakeWithSeconds(Float64(trimSettings.getEndsAt()), preferredTimescale: 1)
-            : avAsset.duration
-        let duration = min((end - start), (avAsset.duration - start))
-        let range = CMTimeRangeMake(start: start, duration: duration)
-        
         let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).first!
         let mediaSize = videoTrack.naturalSize
         
-        var videoWidth = videoTrack.naturalSize.width
-        var videoHeight = videoTrack.naturalSize.height
+        // Resolution
+        let targetVideoSize:CGSize = calculateTargetVideoSize(sourceVideoSize: mediaSize, transcodeSettings: transcodeSettings);
         
-        // Desired size
-        let outWidth = transcodeSettings.getWidth() != 0 ? CGFloat(transcodeSettings.getWidth()) : videoWidth
-        let outHeight = transcodeSettings.getHeight() != 0 ? CGFloat(transcodeSettings.getHeight()) : videoHeight
-        
-        // Final size
-        var newWidth = outWidth
-        var newHeight = outHeight
-        
-        var aspectRatio = videoWidth / videoHeight;
-        
-        // for some portrait videos ios gives the wrong width and height, this fixes that
-        let videoOrientation = self.getOrientationForTrack(avAsset: avAsset)
-        if (videoOrientation == "portrait") {
-            if (videoWidth > videoHeight) {
-                videoWidth = mediaSize.height;
-                videoHeight = mediaSize.width;
-                aspectRatio = videoWidth / videoHeight;
-            }
-        }
-        
-        newWidth = (outWidth != 0 && outHeight != 0) ? outHeight * aspectRatio : videoWidth;
-        newHeight = (outWidth != 0 && outHeight != 0) ? newWidth / aspectRatio : videoHeight;
+        // Trim
+        let start = CMTimeMakeWithSeconds(Float64(trimSettings.getStartsAt() * 1000), preferredTimescale: 1)
+        let end = trimSettings.getEndsAt() > 0
+            ? CMTimeMakeWithSeconds(Float64(trimSettings.getEndsAt() * 1000), preferredTimescale: 1)
+            : avAsset.duration
+        let duration = min((end - start), (avAsset.duration - start))
+        let range = CMTimeRangeMake(start: start, duration: duration)
         
         // Exporter
         let exporter = SimpleSessionExporter(withAsset: avAsset)
@@ -59,12 +37,12 @@ import UIKit
         exporter.timeRange = range
         
         exporter.videoOutputConfiguration = [
-            AVVideoWidthKey: NSNumber(integerLiteral: Int(newWidth)),
-            AVVideoHeightKey: NSNumber(integerLiteral: Int(newHeight)),
+            AVVideoWidthKey: NSNumber(integerLiteral: Int(targetVideoSize.width)),
+            AVVideoHeightKey: NSNumber(integerLiteral: Int(targetVideoSize.height)),
         ]
         
         exporter.export(
-            completionHandler: { status in                
+            completionHandler: { status in
                 switch status {
                 case .completed:
                     completionHandler(exporter.outputURL!)
@@ -154,5 +132,64 @@ import UIKit
         }
         
         return "portrait";
+    }
+    
+    func calculateTargetVideoSize(sourceVideoSize: CGSize, transcodeSettings: TranscodeSettings) -> CGSize {
+        if (transcodeSettings.isKeepAspectRatio()) {
+            let mostSize = transcodeSettings.getWidth() == 0 && transcodeSettings.getHeight() == 0
+            ? 1280
+            : max(transcodeSettings.getWidth(), transcodeSettings.getHeight());
+            
+            return calculateVideoSizeAtMost(sourceVideoSize: sourceVideoSize, mostSize: mostSize);
+        } else {
+            if (transcodeSettings.getWidth() > 0 && transcodeSettings.getHeight() > 0) {
+                return CGSize(
+                    width: transcodeSettings.getWidth(),
+                    height: transcodeSettings.getHeight()
+                );
+            } else {
+                return calculateVideoSizeAtMost(sourceVideoSize: sourceVideoSize, mostSize: 720);
+            }
+        }
+    }
+    
+    func calculateVideoSizeAtMost(sourceVideoSize: CGSize, mostSize: Int) -> CGSize{
+        let sourceMajor = Int(max(sourceVideoSize.width, sourceVideoSize.height));
+        
+        if (sourceMajor <= mostSize) {
+            // No resize needed
+            return CGSize(
+                width: sourceVideoSize.width,
+                height: sourceVideoSize.height
+            );
+        }
+        
+        var outWidth: Int;
+        var outHeight: Int;
+        if (sourceVideoSize.width >= sourceVideoSize.height) {
+            // Landscape
+            let inputRatio:Float = Float(sourceVideoSize.height) / Float(sourceVideoSize.width);
+            
+            outWidth = mostSize;
+            outHeight = Int(Float(mostSize) * inputRatio);
+        } else {
+            // Portrait
+            let inputRatio: Float = Float(sourceVideoSize.width) / Float(sourceVideoSize.width);
+            
+            outHeight = mostSize;
+            outWidth = Int(Float(mostSize) * inputRatio);
+        }
+        
+        if (outWidth % 2 != 0) {
+            outWidth -= 1;
+        }
+        if (outHeight % 2 != 0) {
+            outHeight -= 1;
+        }
+        
+        return CGSize(
+            width: outWidth,
+            height: outHeight
+        );
     }
 }
