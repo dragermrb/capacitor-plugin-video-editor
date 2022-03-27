@@ -74,11 +74,28 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 
 #### EditOptions
 
-| Prop            | Type                                                                         |
-| --------------- | ---------------------------------------------------------------------------- |
-| **`path`**      | <code>string</code>                                                          |
-| **`trim`**      | <code>{ startsAt?: number; endsAt?: number; }</code>                         |
-| **`transcode`** | <code>{ height?: number; width?: number; keepAspectRatio?: boolean; }</code> |
+| Prop            | Type                                                          |
+| --------------- | ------------------------------------------------------------- |
+| **`path`**      | <code>string</code>                                           |
+| **`trim`**      | <code><a href="#trimoptions">TrimOptions</a></code>           |
+| **`transcode`** | <code><a href="#transcodeoptions">TranscodeOptions</a></code> |
+
+
+#### TrimOptions
+
+| Prop           | Type                | Description              |
+| -------------- | ------------------- | ------------------------ |
+| **`startsAt`** | <code>number</code> | StartsAt in milliseconds |
+| **`endsAt`**   | <code>number</code> | EndsAt in milliseconds   |
+
+
+#### TranscodeOptions
+
+| Prop                  | Type                 |
+| --------------------- | -------------------- |
+| **`height`**          | <code>number</code>  |
+| **`width`**           | <code>number</code>  |
+| **`keepAspectRatio`** | <code>boolean</code> |
 
 
 #### MediaFileResult
@@ -100,12 +117,12 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 
 #### ThumbnailOptions
 
-| Prop         | Type                |
-| ------------ | ------------------- |
-| **`path`**   | <code>string</code> |
-| **`at`**     | <code>number</code> |
-| **`width`**  | <code>number</code> |
-| **`height`** | <code>number</code> |
+| Prop         | Type                | Description                                                          |
+| ------------ | ------------------- | -------------------------------------------------------------------- |
+| **`path`**   | <code>string</code> |                                                                      |
+| **`at`**     | <code>number</code> | The time position where the frame will be retrieved in milliseconds. |
+| **`width`**  | <code>number</code> |                                                                      |
+| **`height`** | <code>number</code> |                                                                      |
 
 
 #### ProgressInfo
