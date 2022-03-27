@@ -23,9 +23,9 @@ import UIKit
         let targetVideoSize:CGSize = calculateTargetVideoSize(sourceVideoSize: mediaSize, transcodeSettings: transcodeSettings);
         
         // Trim
-        let start = CMTimeMakeWithSeconds(Float64(trimSettings.getStartsAt() * 1000), preferredTimescale: 1)
+        let start = CMTimeMake(value: Int64(trimSettings.getStartsAt()), timescale: 1000)
         let end = trimSettings.getEndsAt() > 0
-            ? CMTimeMakeWithSeconds(Float64(trimSettings.getEndsAt() * 1000), preferredTimescale: 1)
+            ? CMTimeMake(value: Int64(trimSettings.getEndsAt()), timescale: 1000)
             : avAsset.duration
         let duration = min((end - start), (avAsset.duration - start))
         let range = CMTimeRangeMake(start: start, duration: duration)

@@ -6,10 +6,14 @@ enum TrimSettingsError: Error {
 
 public class TrimSettings: NSObject
 {
-    private var startsAt: Double = 0;
-    private var endsAt: Double = 0;
-    
-    init(startsAt: Double, endsAt: Double) throws
+    private var startsAt: CLong = 0;
+    private var endsAt: CLong = 0;
+
+    /**
+     * startsAt: startsAt in miliSeconds
+     * endsAt: endsAt in miliSeconds
+     */
+    init(startsAt: CLong, endsAt: CLong) throws
     {
         if (startsAt < 0)
         {
@@ -22,13 +26,21 @@ public class TrimSettings: NSObject
         self.startsAt = startsAt;
         self.endsAt = endsAt;
     }
-    
-    func getStartsAt()->Double
+
+    /**
+     * Get startsAt in miliSeconds
+     * @return startsAt in miliSeconds
+     */
+    func getStartsAt()->CLong
     {
         return self.startsAt;
     }
-    
-    func setStartsAt(_ startsAt: Double) throws
+
+    /**
+     * Set startsAt in miliSeconds
+     * startsAt: startsAt in miliSeconds
+     */
+    func setStartsAt(_ startsAt: CLong) throws
     {
         if (startsAt < 0)
         {
@@ -36,13 +48,21 @@ public class TrimSettings: NSObject
         }
         self.startsAt = startsAt;
     }
-    
-    func getEndsAt()->Double
+
+    /**
+     * Get endsAt in miliSeconds
+     * @return endsAt in miliSeconds
+     */
+    func getEndsAt()->CLong
     {
         return self.endsAt;
     }
-    
-    func setEndsAt(_ endsAt: Double) throws
+
+    /**
+     * Set endsAt in miliSeconds
+     * endsAt: endsAt in miliSeconds
+     */
+    func setEndsAt(_ endsAt: CLong) throws
     {
         if (endsAt < 0)
         {

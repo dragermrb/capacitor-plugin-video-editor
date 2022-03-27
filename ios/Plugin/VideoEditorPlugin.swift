@@ -22,8 +22,8 @@ public class VideoEditorPlugin: CAPPlugin {
         
         do {
             let trimSettings = try TrimSettings(
-                startsAt: (trim["startsAt"] ?? 0.0) as! Double,
-                endsAt: (trim["endsAt"] ?? 0.0) as! Double
+                startsAt: (trim["startsAt"] ?? 0) as! CLong,
+                endsAt: (trim["endsAt"] ?? 0) as! CLong
             );
             
             let transcodeSettings = try TranscodeSettings(

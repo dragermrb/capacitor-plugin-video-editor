@@ -11,15 +11,25 @@ export interface VideoEditorPlugin {
 
 export interface EditOptions {
   path: string;
-  trim?: {
-    startsAt?: number;
-    endsAt?: number;
-  };
-  transcode?: {
-    height?: number;
-    width?: number;
-    keepAspectRatio?: boolean;
-  };
+  trim?: TrimOptions;
+  transcode?: TranscodeOptions;
+}
+
+export interface TrimOptions {
+  /**
+   * StartsAt in milliseconds
+   */
+  startsAt?: number;
+  /**
+   * EndsAt in milliseconds
+   */
+  endsAt?: number;
+}
+
+export interface TranscodeOptions {
+  height?: number;
+  width?: number;
+  keepAspectRatio?: boolean;
 }
 
 export interface ThumbnailOptions {
