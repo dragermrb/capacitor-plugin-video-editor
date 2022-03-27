@@ -133,14 +133,14 @@ public class VideoEditorLitr {
         );
     }
 
-    public void thumbnail(Context context, Uri srcUri, File outFile, int at, int width, int height) throws IOException {
+    public void thumbnail(Context context, Uri srcUri, File outFile, int atMs, int width, int height) throws IOException {
 
         int quality = 80;
 
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(context, srcUri);
 
-        Bitmap bitmap = mmr.getFrameAtTime((long) at * 1000 * 1000);
+        Bitmap bitmap = mmr.getFrameAtTime((long) atMs * 1000);
 
         if (width > 0 || height > 0) {
             int videoWidth = bitmap.getWidth();

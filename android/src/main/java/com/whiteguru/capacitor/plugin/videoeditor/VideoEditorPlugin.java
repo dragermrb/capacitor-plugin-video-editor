@@ -139,7 +139,7 @@ public class VideoEditorPlugin extends Plugin {
     @PluginMethod
     public void thumbnail(PluginCall call) {
         String path = call.getString("path");
-        int at = call.getInt("at", 0);
+        int atMs = call.getInt("at", 0);
         int width = call.getInt("width", 0);
         int height = call.getInt("height", 0);
 
@@ -162,7 +162,7 @@ public class VideoEditorPlugin extends Plugin {
 
                 VideoEditorLitr implementation = new VideoEditorLitr();
 
-                implementation.thumbnail(this.getContext(), inputUri, outputFile, at, width, height);
+                implementation.thumbnail(this.getContext(), inputUri, outputFile, atMs, width, height);
             } catch (IOException e) {
                 call.reject(e.getMessage());
                 return;

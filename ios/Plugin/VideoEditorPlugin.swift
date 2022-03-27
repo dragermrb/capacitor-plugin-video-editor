@@ -61,7 +61,7 @@ public class VideoEditorPlugin: CAPPlugin {
     
     @objc func thumbnail(_ call: CAPPluginCall) {
         let path = call.getString("path");
-        let at = call.getInt("at") ?? 0;
+        let atMs = call.getInt("at") ?? 0;
         let width = call.getInt("width") ?? 0;
         let height = call.getInt("height") ??  0;
         
@@ -76,7 +76,7 @@ public class VideoEditorPlugin: CAPPlugin {
             try self.implementation.thumbnail(
                 srcFile: URL(fileURLWithPath: path!),
                 outFile: outFile,
-                at: at,
+                atMs: atMs,
                 width: width,
                 height: height
             );

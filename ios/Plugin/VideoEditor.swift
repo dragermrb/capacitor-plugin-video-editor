@@ -60,7 +60,7 @@ import UIKit
     @objc public func thumbnail(
         srcFile: URL,
         outFile: URL,
-        at: Int,
+        atMs: Int,
         width: Int,
         height: Int
     ) throws {
@@ -70,7 +70,7 @@ import UIKit
         let cgImage = try imgGenerator.copyCGImage(
             at: min(
                 asset.duration,
-                CMTimeMake(value: Int64(at), timescale: 1)
+                CMTimeMake(value: Int64(atMs), timescale: 1000)
             ),
             actualTime: nil
         )

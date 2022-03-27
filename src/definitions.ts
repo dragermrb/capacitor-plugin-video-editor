@@ -34,6 +34,9 @@ export interface TranscodeOptions {
 
 export interface ThumbnailOptions {
   path: string;
+  /**
+   * The time position where the frame will be retrieved in milliseconds.
+   */
   at?: number;
   width?: number;
   height?: number;
