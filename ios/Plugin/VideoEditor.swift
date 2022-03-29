@@ -174,7 +174,7 @@ import UIKit
             outHeight = Int(Float(mostSize) * inputRatio);
         } else {
             // Portrait
-            let inputRatio: Float = Float(sourceVideoSize.width) / Float(sourceVideoSize.width);
+            let inputRatio: Float = Float(sourceVideoSize.width) / Float(sourceVideoSize.height);
             
             outHeight = mostSize;
             outWidth = Int(Float(mostSize) * inputRatio);
