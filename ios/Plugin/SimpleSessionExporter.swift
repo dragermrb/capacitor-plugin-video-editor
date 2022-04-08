@@ -113,7 +113,14 @@ extension SimpleSessionExporter {
             start: .zero,
             duration: composition.duration)
         videoComposition.instructions = [instruction]
-        let layerInstruction = compositionLayerInstruction(for: compositionTrack, assetTrack: assetTrack)
+        
+        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionTrack)
+        let transform = assetTrack.preferredTransform.scaledBy(
+            x: videoSize.width / assetTrack.naturalSize.width,
+            y: videoSize.height / assetTrack.naturalSize.height
+        )
+        layerInstruction.setTransform(transform, at: CMTime.zero)
+        
         instruction.layerInstructions = [layerInstruction]
         
         // Export
@@ -144,16 +151,6 @@ extension SimpleSessionExporter {
             }
         }
     }
-    
-    private func compositionLayerInstruction(for track: AVCompositionTrack, assetTrack: AVAssetTrack) -> AVMutableVideoCompositionLayerInstruction {
-        let instruction = AVMutableVideoCompositionLayerInstruction(assetTrack: track)
-        let transform = assetTrack.preferredTransform
-        
-        instruction.setTransform(transform, at: .zero)
-        
-        return instruction
-    }
-    
 }
 
 // MARK: - AVAsset extension
