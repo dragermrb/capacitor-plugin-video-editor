@@ -17,7 +17,8 @@ import UIKit
     ) {
         let avAsset = AVURLAsset(url: srcFile, options: nil)
         let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).first!
-        let mediaSize = videoTrack.naturalSize
+        let transformedVideoSize = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
+        let mediaSize = CGSize(width: abs(transformedVideoSize.width), height: abs(transformedVideoSize.height))
         
         // Resolution
         let targetVideoSize:CGSize = calculateTargetVideoSize(sourceVideoSize: mediaSize, transcodeSettings: transcodeSettings);

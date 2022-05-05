@@ -54,10 +54,10 @@ extension SimpleSessionExporter {
         guard let asset = self.asset,
               let outputURL = self.outputURL,
               let outputFileType = self.outputFileType else {
-                  print("SimpleSessionExporter, an asset and output URL are required for encoding")
-                  completionHandler(.failed)
-                  return
-              }
+            print("SimpleSessionExporter, an asset and output URL are required for encoding")
+            completionHandler(.failed)
+            return
+        }
         
         let composition = AVMutableComposition()
         
@@ -102,7 +102,9 @@ extension SimpleSessionExporter {
         let height = videoHeight!.intValue
         
         let videoSize = CGSize(width: width, height: height)
-        //var naturalSize = assetTrack.naturalSize
+        let transformedVideoSize = assetTrack.naturalSize.applying(assetTrack.preferredTransform)
+        let mediaSize = CGSize(width: abs(transformedVideoSize.width), height: abs(transformedVideoSize.height))
+        let scale = videoSize.width / mediaSize.width
         
         let videoComposition = AVMutableVideoComposition()
         videoComposition.renderSize = videoSize
@@ -115,11 +117,7 @@ extension SimpleSessionExporter {
         videoComposition.instructions = [instruction]
         
         let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionTrack)
-        let transform = assetTrack.preferredTransform.scaledBy(
-            x: videoSize.width / assetTrack.naturalSize.width,
-            y: videoSize.height / assetTrack.naturalSize.height
-        )
-        layerInstruction.setTransform(transform, at: CMTime.zero)
+        layerInstruction.setTransform(asset.scaleTransform(scaleFactor: scale), at: CMTime.zero)
         
         instruction.layerInstructions = [layerInstruction]
         
@@ -174,4 +172,61 @@ extension AVAsset {
         exporter.videoOutputConfiguration = videoOutputConfiguration
         exporter.export(completionHandler: completionHandler)
     }
+    
+    private var g_naturalSize: CGSize {
+        return tracks(withMediaType: AVMediaType.video).first?.naturalSize ?? .zero
+    }
+    
+    var g_correctSize: CGSize {
+        return g_isPortrait ? CGSize(width: g_naturalSize.height, height: g_naturalSize.width) : g_naturalSize
+    }
+    
+    var g_isPortrait: Bool {
+        let portraits: [UIInterfaceOrientation] = [.portrait, .portraitUpsideDown]
+        return portraits.contains(g_orientation)
+    }
+    
+    // Same as UIImageOrientation
+    var g_orientation: UIInterfaceOrientation {
+        guard let transform = tracks(withMediaType: AVMediaType.video).first?.preferredTransform else {
+            return .portrait
+        }
+        
+        switch (transform.tx, transform.ty) {
+        case (0, 0):
+            return .landscapeRight
+        case (g_naturalSize.width, g_naturalSize.height):
+            return .landscapeLeft
+        case (0, g_naturalSize.width):
+            return .portraitUpsideDown
+        default:
+            return .portrait
+        }
+    }
+    
+    public func scaleTransform(scaleFactor: CGFloat) -> CGAffineTransform {
+        let offset: CGPoint
+        let angle: Double
+
+        switch g_orientation {
+        case .landscapeLeft:
+          offset = CGPoint(x: g_correctSize.width, y: g_correctSize.height)
+          angle = Double.pi / 2
+        case .landscapeRight:
+          offset = CGPoint.zero
+          angle = 0
+        case .portraitUpsideDown:
+          offset = CGPoint(x: 0, y: g_correctSize.height)
+          angle = -Double.pi / 2
+        default:
+          offset = CGPoint(x: g_correctSize.width, y: 0)
+          angle = Double.pi / 2
+        }
+
+        let scale = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
+        let translation = scale.translatedBy(x: offset.x, y: offset.y)
+        let rotation = translation.rotated(by: CGFloat(angle))
+
+        return rotation
+      }
 }
