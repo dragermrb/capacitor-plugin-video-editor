@@ -60,7 +60,7 @@ public class VideoEditorPlugin: CAPPlugin {
     }
     
     @objc func thumbnail(_ call: CAPPluginCall) {
-        let path = call.getString("path");
+        let path = call.getString("path")?.replacingOccurrences(of: "file://", with: "");
         let atMs = call.getInt("at") ?? 0;
         let width = call.getInt("width") ?? 0;
         let height = call.getInt("height") ??  0;
