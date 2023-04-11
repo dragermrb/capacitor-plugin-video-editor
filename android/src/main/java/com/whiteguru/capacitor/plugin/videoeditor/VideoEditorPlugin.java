@@ -128,7 +128,7 @@ public class VideoEditorPlugin extends Plugin {
                             };
 
                             implementation.edit(getContext(), inputFile, outputFile, trimSettings, transcodeSettings, videoTransformationListener);
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             call.reject(e.getMessage());
                         }
                     }
@@ -163,7 +163,7 @@ public class VideoEditorPlugin extends Plugin {
                 VideoEditorLitr implementation = new VideoEditorLitr();
 
                 implementation.thumbnail(this.getContext(), inputUri, outputFile, atMs, width, height);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 call.reject(e.getMessage());
                 return;
             }
