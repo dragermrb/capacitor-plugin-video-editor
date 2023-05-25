@@ -9,10 +9,17 @@ npm install @whiteguru/capacitor-plugin-video-editor
 npx cap sync
 ```
 
+### or for Capacitor 4.x
+
+```bash
+pm install @whiteguru/capacitor-plugin-video-editor@^4.0.4
+npx cap sync
+```
+
 ### or for Capacitor 3.x
 
 ```bash
-pm install @whiteguru/capacitor-plugin-video-editor@3.0.1
+pm install @whiteguru/capacitor-plugin-video-editor@^3.0.1
 npx cap sync
 ```
 
