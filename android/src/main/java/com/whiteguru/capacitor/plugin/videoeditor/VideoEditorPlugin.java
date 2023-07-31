@@ -17,6 +17,8 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
 
+import android.util.Log;
+
 import com.linkedin.android.litr.analytics.TrackTransformationInfo;
 import com.linkedin.android.litr.TransformationListener;
 
@@ -33,13 +35,19 @@ import java.util.List;
                 @Permission(
                         strings = {Manifest.permission.READ_EXTERNAL_STORAGE},
                         alias = VideoEditorPlugin.STORAGE
+                ),
+                @Permission(
+                        strings = {Manifest.permission.READ_MEDIA_VIDEO},
+                        alias = VideoEditorPlugin.MEDIA_VIDEO
                 )
+
         }
 )
 public class VideoEditorPlugin extends Plugin {
 
     // Permission alias constants
     static final String STORAGE = "storage";
+    static final String MEDIA_VIDEO = "media_video";
 
     // Message constants
     private static final String PERMISSION_DENIED_ERROR_STORAGE = "User denied access to storage";
@@ -189,6 +197,7 @@ public class VideoEditorPlugin extends Plugin {
      */
     @PermissionCallback
     private void storagePermissionsCallback(PluginCall call) {
+        Log.d("TAG", "Swag and then the getPermissionState(STORAGE) result: " + getPermissionState(STORAGE));
         if (getPermissionState(STORAGE) != PermissionState.GRANTED) {
             Logger.debug(getLogTag(), "User denied photos permission: " + getPermissionState(STORAGE).toString());
             call.reject(PERMISSION_DENIED_ERROR_STORAGE);
