@@ -3,6 +3,7 @@ package com.whiteguru.capacitor.plugin.videoeditor;
 import android.Manifest;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +17,6 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
-
-import android.util.Log;
 
 import com.linkedin.android.litr.analytics.TrackTransformationInfo;
 import com.linkedin.android.litr.TransformationListener;
@@ -51,6 +50,8 @@ public class VideoEditorPlugin extends Plugin {
 
     // Message constants
     private static final String PERMISSION_DENIED_ERROR_STORAGE = "User denied access to storage";
+    private static final String STORAGE_PERMISSION = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ? MEDIA_VIDEO : STORAGE;
+
 
     @PluginMethod
     public void edit(PluginCall call) {
@@ -183,8 +184,8 @@ public class VideoEditorPlugin extends Plugin {
     }
 
     private boolean checkStoragePermissions(PluginCall call) {
-        if (getPermissionState(STORAGE) != PermissionState.GRANTED) {
-            requestPermissionForAlias(STORAGE, call, "storagePermissionsCallback");
+        if (getPermissionState(STORAGE_PERMISSION) != PermissionState.GRANTED) {
+            requestPermissionForAlias(STORAGE_PERMISSION, call, "storagePermissionsCallback");
             return false;
         }
         return true;
@@ -197,9 +198,8 @@ public class VideoEditorPlugin extends Plugin {
      */
     @PermissionCallback
     private void storagePermissionsCallback(PluginCall call) {
-        Log.d("TAG", "Swag and then the getPermissionState(STORAGE) result: " + getPermissionState(STORAGE));
-        if (getPermissionState(STORAGE) != PermissionState.GRANTED) {
-            Logger.debug(getLogTag(), "User denied photos permission: " + getPermissionState(STORAGE).toString());
+        if (getPermissionState(STORAGE_PERMISSION) != PermissionState.GRANTED) {
+            Logger.debug(getLogTag(), "User denied photos permission: " + getPermissionState(STORAGE_PERMISSION).toString());
             call.reject(PERMISSION_DENIED_ERROR_STORAGE);
             return;
         }
