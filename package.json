@@ -74,5 +74,8 @@
     "android": {
       "src": "android"
     }
+  },
+  "engines": {
+    "node": ">=16"
   }
 }
