@@ -66,6 +66,7 @@ public class VideoEditorLitr {
         TransformationOptions transformationOptions = new TransformationOptions.Builder()
                 .setGranularity(MediaTransformer.GRANULARITY_DEFAULT)
                 .setSourceMediaRange(new MediaRange(startsAtUs, endsAtUs))
+                .setRemoveMetadata(true)
                 .build();
 
         // Video codec config
