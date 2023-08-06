@@ -23,6 +23,26 @@ pm install @whiteguru/capacitor-plugin-video-editor@^3.0.1
 npx cap sync
 ```
 
+## Android
+
+This API requires the following permissions be added to your `AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+```
+
+You can also specify those permissions only for the Android versions where they will be requested:
+
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+<uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+```
+
+The storage permissions are for reading video files.
+
+Read about [Setting Permissions](https://capacitorjs.com/docs/android/configuration#setting-permissions) in the [Android Guide](https://capacitorjs.com/docs/android) for more information on setting Android permissions.
+
 ## API
 
 <docgen-index>
