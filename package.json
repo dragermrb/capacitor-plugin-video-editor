@@ -1,6 +1,6 @@
 {
   "name": "@whiteguru/capacitor-plugin-video-editor",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Capacitor plugin to edit videos",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
