@@ -29,6 +29,8 @@ open class SimpleSessionExporter: NSObject {
         self.asset = asset
     }
     
+    private var exportSession: AVAssetExportSession?;
+    
     public override init() {
         self.timeRange = CMTimeRange(start: CMTime.zero, end: CMTime.positiveInfinity)
         super.init()
@@ -45,6 +47,12 @@ extension SimpleSessionExporter {
     
     /// Completion handler type for when an export finishes.
     public typealias CompletionHandler = (_ status: AVAssetExportSession.Status) -> Void
+    
+    var progress: Float {
+        get {
+            self.exportSession?.progress ?? 0.0;
+        }
+    }
     
     /// Initiates an export session.
     ///
@@ -134,13 +142,16 @@ extension SimpleSessionExporter {
         export.videoComposition = videoComposition
         export.outputFileType = outputFileType
         export.outputURL = outputURL
+        self.exportSession = export
         
         export.exportAsynchronously {
             DispatchQueue.main.async {
                 switch export.status {
                 case .completed:
+                    self.exportSession = nil
                     completionHandler(.completed)
                 default:
+                    self.exportSession = nil
                     print("Something went wrong during export.")
                     print(export.error ?? "unknown error")
                     completionHandler(.failed)

@@ -42,8 +42,17 @@ import UIKit
             AVVideoHeightKey: NSNumber(integerLiteral: Int(targetVideoSize.height)),
         ]
         
+        let progressUpdater = DispatchQueue.main.schedule(
+            after: .init(.now()),
+            interval: .milliseconds(250),
+            {
+                progressHandler(exporter.progress)
+            }
+        )
+        
         exporter.export(
             completionHandler: { status in
+                progressUpdater.cancel()
                 switch status {
                 case .completed:
                     completionHandler(exporter.outputURL!)
