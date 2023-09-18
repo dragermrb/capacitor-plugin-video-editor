@@ -1,9 +1,11 @@
 package com.whiteguru.capacitor.plugin.videoeditor;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
