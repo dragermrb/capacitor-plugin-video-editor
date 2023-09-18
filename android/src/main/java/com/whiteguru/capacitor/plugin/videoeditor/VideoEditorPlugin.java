@@ -223,7 +223,13 @@ public class VideoEditorPlugin extends Plugin {
     private JSObject createMediaFile(File file) {
         Context context = getBridge().getActivity().getApplicationContext();
         Uri uri = Uri.fromFile(file);
-        String mimeType = context.getContentResolver().getType(uri);
+        String mimeType;
+
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            mimeType = context.getContentResolver().getType(uri);
+        } else {
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri.toString()));
+        }
 
         JSObject ret = new JSObject();
 
