@@ -1,9 +1,11 @@
 package com.whiteguru.capacitor.plugin.videoeditor;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -223,7 +225,13 @@ public class VideoEditorPlugin extends Plugin {
     private JSObject createMediaFile(File file) {
         Context context = getBridge().getActivity().getApplicationContext();
         Uri uri = Uri.fromFile(file);
-        String mimeType = context.getContentResolver().getType(uri);
+        String mimeType;
+
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            mimeType = context.getContentResolver().getType(uri);
+        } else {
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(uri.toString()));
+        }
 
         JSObject ret = new JSObject();
 
