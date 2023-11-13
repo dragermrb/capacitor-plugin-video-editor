@@ -95,27 +95,34 @@ import UIKit
         }
     }
     
-    func cropToBounds(image: UIImage, width: Double, height: Double) -> UIImage {
+    func cropToBounds(image: UIImage, width: Double? = nil, height: Double? = nil) -> UIImage {
         let cgimage = image.cgImage!
         let contextImage: UIImage = UIImage(cgImage: cgimage)
         let contextSize: CGSize = contextImage.size
+
+        // Calculate the aspect ratio based on the provided width and height if available,
+        // or use contextSize.width and contextSize.height as defaults.
+        let aspectRatio: CGFloat
+        if let w = width, let h = height {
+            aspectRatio = CGFloat(w / h)
+        } else {
+            aspectRatio = contextSize.width / contextSize.height
+        }
+        
         var posX: CGFloat = 0.0
         var posY: CGFloat = 0.0
-        var cgwidth: CGFloat = CGFloat(width)
-        var cgheight: CGFloat = CGFloat(height)
+        var cgwidth: CGFloat = contextSize.width
+        var cgheight: CGFloat = contextSize.height
         
-        // See what size is longer and create the center off of that
-        if contextSize.width > contextSize.height {
-            posX = ((contextSize.width - contextSize.height) / 2)
-            posY = 0
-            cgwidth = contextSize.height
-            cgheight = contextSize.height
+        // Calculate the new dimensions while preserving the aspect ratio
+        if contextSize.width / aspectRatio > contextSize.height {
+            cgwidth = contextSize.height * aspectRatio
         } else {
-            posX = 0
-            posY = ((contextSize.height - contextSize.width) / 2)
-            cgwidth = contextSize.width
-            cgheight = contextSize.width
+            cgheight = contextSize.width / aspectRatio
         }
+        
+        posX = (contextSize.width - cgwidth) / 2
+        posY = (contextSize.height - cgheight) / 2
         
         let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
         
