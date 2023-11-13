@@ -104,7 +104,11 @@ import UIKit
         // or use contextSize.width and contextSize.height as defaults.
         let aspectRatio: CGFloat
         if let w = width, let h = height {
-            aspectRatio = CGFloat(w / h)
+            if (w > 0 && h > 0){
+                aspectRatio = CGFloat(w / h)
+            } else {
+                aspectRatio = contextSize.width / contextSize.height
+            }
         } else {
             aspectRatio = contextSize.width / contextSize.height
         }
