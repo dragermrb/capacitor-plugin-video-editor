@@ -73,6 +73,7 @@ VideoEditor.edit({
     width: 720,
     height: 480,
     keepAspectRatio: true,
+    fps: 30,
   },
   trim: {
     startsAt: 3 * 1000, // from 00:03
@@ -204,12 +205,12 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 
 #### TranscodeOptions
 
-| Prop                  | Type                 |
-| --------------------- | -------------------- |
-| **`height`**          | <code>number</code>  |
-| **`width`**           | <code>number</code>  |
-| **`keepAspectRatio`** | <code>boolean</code> |
-| **`fps`**             | <code>number</code>  |
+| Prop                  | Type                 | Description                       |
+| --------------------- | -------------------- | --------------------------------- |
+| **`height`**          | <code>number</code>  |                                   |
+| **`width`**           | <code>number</code>  |                                   |
+| **`keepAspectRatio`** | <code>boolean</code> | Keep Aspect Ratio, default `true` |
+| **`fps`**             | <code>number</code>  | Frames per second, default `30`   |
 
 
 #### ThumbnailOptions

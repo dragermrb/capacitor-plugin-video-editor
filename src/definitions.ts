@@ -29,7 +29,13 @@ export interface TrimOptions {
 export interface TranscodeOptions {
   height?: number;
   width?: number;
+  /**
+   * Keep Aspect Ratio, default `true`
+   */
   keepAspectRatio?: boolean;
+  /**
+   * Frames per second, default `30`
+   */
   fps?: number;
 }
 
