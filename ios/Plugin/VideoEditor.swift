@@ -36,7 +36,8 @@ import UIKit
         exporter.outputFileType = AVFileType.mp4
         exporter.outputURL = outFile
         exporter.timeRange = range
-        
+        exporter.fps = transcodeSettings.getFps()
+
         exporter.videoOutputConfiguration = [
             AVVideoWidthKey: NSNumber(integerLiteral: Int(targetVideoSize.width)),
             AVVideoHeightKey: NSNumber(integerLiteral: Int(targetVideoSize.height)),

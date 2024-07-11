@@ -29,7 +29,8 @@ public class VideoEditorPlugin: CAPPlugin {
             let transcodeSettings = try TranscodeSettings(
                 height: (transcode["height"] ?? 0) as! Int,
                 width: (transcode["width"] ?? 0) as! Int,
-                keepAspectRatio: (transcode["keepAspectRatio"] ?? true) as! Bool
+                keepAspectRatio: (transcode["keepAspectRatio"] ?? true) as! Bool,
+                fps: (transcode["fps"] ?? 30) as! Int
             );
             
             let outFile = self.getDestVideoUrl();

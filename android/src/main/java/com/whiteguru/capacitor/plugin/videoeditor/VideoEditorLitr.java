@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class VideoEditorLitr {
-    static final int DEFAULT_VIDEO_FRAMERATE = 30;
+
     static final int DEFAULT_VIDEO_KEY_FRAME_INTERVAL = 5;
     static final int DEFAULT_AUDIO_BITRATE = 128000;
     static final int DEFAULT_AUDIO_CHANNEL_COUNT = 2;
@@ -74,14 +74,13 @@ public class VideoEditorLitr {
         targetVideoFormat.setString(MediaFormat.KEY_MIME, "video/avc");
         targetVideoFormat.setInteger(MediaFormat.KEY_WIDTH, targetVideoSize.width);
         targetVideoFormat.setInteger(MediaFormat.KEY_HEIGHT, targetVideoSize.height);
-        targetVideoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, DEFAULT_VIDEO_FRAMERATE);
+        targetVideoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, transcodeSettings.getFps());
         targetVideoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, DEFAULT_VIDEO_KEY_FRAME_INTERVAL);
         targetVideoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-        targetVideoFormat.setInteger(MediaFormat.KEY_BIT_RATE, (int) estimateVideoBitRate(
-                targetVideoSize.width,
-                targetVideoSize.height,
-                DEFAULT_VIDEO_FRAMERATE
-        ));
+        targetVideoFormat.setInteger(
+            MediaFormat.KEY_BIT_RATE,
+            (int) estimateVideoBitRate(targetVideoSize.width, targetVideoSize.height, transcodeSettings.getFps())
+        );
 
         // Audio codec config
         MediaFormat targetAudioFormat = new MediaFormat();

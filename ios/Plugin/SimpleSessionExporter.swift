@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 
 
 // MARK: - SimpleSessionExporter
@@ -20,7 +21,8 @@ open class SimpleSessionExporter: NSObject {
     public var timeRange: CMTimeRange
     public var optimizeForNetworkUse: Bool = false
     public var videoOutputConfiguration: [String : Any]?
-    
+    public var fps: Int = 30
+
     /// Initializes a session with an asset to export.
     ///
     /// - Parameter asset: The asset to export.
@@ -116,7 +118,7 @@ extension SimpleSessionExporter {
         
         let videoComposition = AVMutableVideoComposition()
         videoComposition.renderSize = videoSize
-        videoComposition.frameDuration = CMTime(value: 1, timescale: 30)
+        videoComposition.frameDuration = CMTime(value: 1, timescale: CMTimeScale(self.fps))
         
         let instruction = AVMutableVideoCompositionInstruction()
         instruction.timeRange = CMTimeRange(

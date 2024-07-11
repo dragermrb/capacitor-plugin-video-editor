@@ -30,6 +30,7 @@ export interface TranscodeOptions {
   height?: number;
   width?: number;
   keepAspectRatio?: boolean;
+  fps?: number;
 }
 
 export interface ThumbnailOptions {

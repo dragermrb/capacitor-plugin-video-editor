@@ -95,7 +95,8 @@ public class VideoEditorPlugin extends Plugin {
                             TranscodeSettings transcodeSettings = new TranscodeSettings(
                                     transcode.getInteger("height", 0),
                                     transcode.getInteger("width", 0),
-                                    transcode.getBoolean("keepAspectRatio", true)
+                                    transcode.getBoolean("keepAspectRatio", true),
+                                    transcode.getInteger("fps", 30)
                             );
 
                             TransformationListener videoTransformationListener = new TransformationListener() {

@@ -209,6 +209,7 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`height`**          | <code>number</code>  |
 | **`width`**           | <code>number</code>  |
 | **`keepAspectRatio`** | <code>boolean</code> |
+| **`fps`**             | <code>number</code>  |
 
 
 #### ThumbnailOptions
