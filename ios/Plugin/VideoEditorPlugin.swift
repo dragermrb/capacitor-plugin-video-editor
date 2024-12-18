@@ -60,7 +60,7 @@ public class VideoEditorPlugin: CAPPlugin {
         }
     }
     
-    @objc func thumbnail(_ call: CAPPluginCall) {
+  @objc func thumbnail(_ call: CAPPluginCall) {
         let path = call.getString("path")?.replacingOccurrences(of: "file://", with: "");
         let atMs = call.getInt("at") ?? 0;
         let width = call.getInt("width") ?? 0;
@@ -73,20 +73,22 @@ public class VideoEditorPlugin: CAPPlugin {
         
         let outFile = self.getDestImageUrl();
         
-        do {
-            try self.implementation.thumbnail(
-                srcFile: URL(fileURLWithPath: path!),
-                outFile: outFile,
-                atMs: atMs,
-                width: width,
-                height: height
-            );
-            
-            call.resolve([
-                "file": self.createMediaFile(url: outFile),
-            ]);
-        } catch {
-            call.reject("Invalid parameters")
+        Task {
+            do {
+                try await self.implementation.thumbnail(
+                    srcFile: URL(fileURLWithPath: path!),
+                    outFile: outFile,
+                    atMs: atMs,
+                    width: width,
+                    height: height
+                );
+                  
+                call.resolve([
+                    "file": self.createMediaFile(url: outFile),
+                ]);
+            } catch {
+                call.reject("Invalid parameters")
+            }
         }
     }
     

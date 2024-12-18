@@ -74,17 +74,31 @@ import UIKit
         atMs: Int,
         width: Int,
         height: Int
-    ) throws {
+    ) async throws {
         let asset = AVURLAsset(url: srcFile, options: nil)
         let imgGenerator = AVAssetImageGenerator(asset: asset)
         imgGenerator.appliesPreferredTrackTransform = true
-        let cgImage = try imgGenerator.copyCGImage(
-            at: min(
+      
+        var cgImage: CGImage
+      
+        if #available(iOS 16, *) {
+            cgImage = try await imgGenerator.image(
+              at: min(
                 asset.duration,
                 CMTimeMake(value: Int64(atMs), timescale: 1000)
+              )
+            ).image
+        } else {
+          // Fallback on earlier versions
+          cgImage = try imgGenerator.copyCGImage(
+            at: min(
+              asset.duration,
+              CMTimeMake(value: Int64(atMs), timescale: 1000)
             ),
             actualTime: nil
-        )
+          )
+        }
+  
         let thumbnail = cropToBounds(
             image: UIImage(cgImage: cgImage),
             width: Double(width),
