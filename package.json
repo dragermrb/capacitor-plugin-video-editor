@@ -5,6 +5,7 @@
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
+  "type": "module",
   "unpkg": "dist/plugin.js",
   "files": [
     "android/src/main/",
