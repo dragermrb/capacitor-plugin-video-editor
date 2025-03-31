@@ -2,10 +2,17 @@
 
 Capacitor plugin to edit videos
 
-## Install (Capacitor 6.x)
+## Install (Capacitor 7.x)
 
 ```bash
 npm install @whiteguru/capacitor-plugin-video-editor
+npx cap sync
+```
+
+## Install (Capacitor 6.x)
+
+```bash
+npm install @whiteguru/capacitor-plugin-video-editor@^6.1.2
 npx cap sync
 ```
 
@@ -53,19 +60,12 @@ Read about [Setting Permissions](https://capacitorjs.com/docs/android/configurat
 ## Example
 
 ```typescript
-import {
-  VideoEditor,
-  MediaFileResult,
-} from '@whiteguru/capacitor-plugin-video-editor';
+import { VideoEditor, MediaFileResult } from '@whiteguru/capacitor-plugin-video-editor';
 
-const sourceVideoPath =
-  'file:///var/mobile/Containers/Data/...../sourceVideo.mp4';
+const sourceVideoPath = 'file:///var/mobile/Containers/Data/...../sourceVideo.mp4';
 
 // Transcode with progress
-const progressListener = await VideoEditor.addListener(
-  'transcodeProgress',
-  info => console.log('info', info),
-);
+const progressListener = await VideoEditor.addListener('transcodeProgress', (info) => console.log('info', info));
 
 VideoEditor.edit({
   path: sourceVideoPath,
@@ -85,7 +85,7 @@ VideoEditor.edit({
 
     console.log('mediaPath', mediaFileResult.file.path);
   },
-  error => {
+  (error) => {
     console.error('error', error);
   },
 );
@@ -100,7 +100,7 @@ VideoEditor.thumbnail({
   (thumbMediaFileResult: MediaFileResult) => {
     console.log('thumbPath', thumbMediaFileResult.file.path);
   },
-  error => {
+  (error) => {
     console.error('error', error);
   },
 );
@@ -112,7 +112,7 @@ VideoEditor.thumbnail({
 
 * [`edit(...)`](#edit)
 * [`thumbnail(...)`](#thumbnail)
-* [`addListener('transcodeProgress', ...)`](#addlistenertranscodeprogress)
+* [`addListener('transcodeProgress', ...)`](#addlistenertranscodeprogress-)
 * [Interfaces](#interfaces)
 
 </docgen-index>
