@@ -3,6 +3,7 @@ package com.whiteguru.capacitor.plugin.videoeditor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaCodecInfo;
+import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import com.linkedin.android.litr.TransformationListener;
 import com.linkedin.android.litr.TransformationOptions;
 import com.linkedin.android.litr.analytics.TrackTransformationInfo;
 import com.linkedin.android.litr.io.MediaRange;
+import com.whiteguru.capacitor.plugin.videoeditor.dto.MediaTrackFormat;
 import com.whiteguru.capacitor.plugin.videoeditor.dto.SourceMedia;
 import com.whiteguru.capacitor.plugin.videoeditor.dto.VideoSize;
 import com.whiteguru.capacitor.plugin.videoeditor.dto.VideoTrackFormat;
@@ -41,6 +43,28 @@ public class VideoEditorLitr {
         return (long) (0.07F * 2 * width * height * frameRate);
     }
 
+  /** Returns audio bitrate in bits/sec if available, otherwise DEFAULT_AUDIO_BITRATE. */
+  public static int getTargetAudioBitrate(Context context, Uri uri) throws IOException {
+    MediaExtractor extractor = new MediaExtractor();
+    try {
+      extractor.setDataSource(context, uri, null);
+
+      for (int i = 0; i < extractor.getTrackCount(); i++) {
+        MediaFormat format = extractor.getTrackFormat(i);
+        String mime = format.getString(MediaFormat.KEY_MIME);
+        if (mime != null && mime.startsWith("audio/")) {
+          if (format.containsKey(MediaFormat.KEY_BIT_RATE)) {
+            return format.getInteger(MediaFormat.KEY_BIT_RATE); // bps
+          }
+          return DEFAULT_AUDIO_BITRATE; // not reported (common for some VBR / containers)
+        }
+      }
+      return DEFAULT_AUDIO_BITRATE; // no audio track
+    } finally {
+      extractor.release();
+    }
+  }
+
     public void edit(Context context, File srcFile, File outFile, TrimSettings trimSettings, TranscodeSettings transcodeSettings, TransformationListener videoTransformationListener) throws IOException {
         MediaTransformer mediaTransformer = new MediaTransformer(context);
 
@@ -48,16 +72,19 @@ public class VideoEditorLitr {
         Uri sourceVideoUri = Uri.fromFile(srcFile);
         String targetVideoFilePath = outFile.getPath();
         SourceMedia sourceMedia = new SourceMedia(context, sourceVideoUri);
-
         // Resolution
         List<VideoTrackFormat> videoTracks = sourceMedia.getVideoTracks();
         if (videoTracks.size() == 0) {
             throw new IOException("Video track not found");
         }
         VideoSize targetVideoSize = calculateTargetVideoSize(videoTracks.get(0), transcodeSettings);
-
         Logger.debug("Source video size: " + (new VideoSize(videoTracks.get(0).width, videoTracks.get(0).height)));
         Logger.debug("Target video size: " + targetVideoSize);
+        int estimatedBitrate= (int) estimateVideoBitRate(targetVideoSize.width, targetVideoSize.height, transcodeSettings.getFps());
+        int originalBitrate = videoTracks.get(0).bitrate;
+
+        int targetAudioBitrate = getTargetAudioBitrate(context,sourceVideoUri);
+
 
         // Trim
         long startsAtUs = trimSettings.getStartsAt() * 1000;
@@ -79,15 +106,16 @@ public class VideoEditorLitr {
         targetVideoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
         targetVideoFormat.setInteger(
             MediaFormat.KEY_BIT_RATE,
-            (int) estimateVideoBitRate(targetVideoSize.width, targetVideoSize.height, transcodeSettings.getFps())
+            Math.min(estimatedBitrate,originalBitrate)
         );
+
 
         // Audio codec config
         MediaFormat targetAudioFormat = new MediaFormat();
         targetAudioFormat.setString(MediaFormat.KEY_MIME, DEFAULT_AUDIO_MIME);
         targetAudioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, DEFAULT_AUDIO_CHANNEL_COUNT);
         targetAudioFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, DEFAULT_AUDIO_SAMPLE_RATE);
-        targetAudioFormat.setInteger(MediaFormat.KEY_BIT_RATE, DEFAULT_AUDIO_BITRATE);
+        targetAudioFormat.setInteger(MediaFormat.KEY_BIT_RATE, targetAudioBitrate);
 
         TransformationListener listener = new TransformationListener() {
             @Override
