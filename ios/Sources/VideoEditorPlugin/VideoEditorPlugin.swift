@@ -7,7 +7,13 @@ import MobileCoreServices
  * here: https://capacitorjs.com/docs/plugins/ios
  */
 @objc(VideoEditorPlugin)
-public class VideoEditorPlugin: CAPPlugin {
+public class VideoEditorPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "VideoEditorPlugin"
+    public let jsName = "VideoEditor"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "edit", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "thumbnail", returnType: CAPPluginReturnPromise),
+    ]
     private let implementation = VideoEditor()
     
     @objc func edit(_ call: CAPPluginCall) {

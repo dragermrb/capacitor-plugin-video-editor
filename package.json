@@ -1,72 +1,4 @@
 {
-  "name": "@whiteguru/capacitor-plugin-video-editor",
-  "version": "7.1.1",
-  "description": "Capacitor plugin to edit videos",
-  "main": "dist/plugin.cjs.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
-  "unpkg": "dist/plugin.js",
-  "files": [
-    "android/src/main/",
-    "android/build.gradle",
-    "dist/",
-    "ios/Plugin/",
-    "WhiteguruCapacitorPluginVideoEditor.podspec"
-  ],
-  "author": "Manuel Rodríguez",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dragermrb/capacitor-plugin-video-editor.git"
-  },
-  "bugs": {
-    "url": "https://github.com/dragermrb/capacitor-plugin-video-editor/issues"
-  },
-  "keywords": [
-    "capacitor",
-    "plugin",
-    "native"
-  ],
-  "scripts": {
-    "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
-    "verify:ios": "cd ios && pod install && xcodebuild -workspace Plugin.xcworkspace -scheme Plugin -destination generic/platform=iOS && cd ..",
-    "verify:android": "cd android && ./gradlew clean build test && cd ..",
-    "verify:web": "npm run build",
-    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
-    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- autocorrect --format",
-    "eslint": "eslint . --ext ts",
-    "prettier": "prettier \"**/*.{css,html,ts,js,java}\" --plugin=prettier-plugin-java",
-    "swiftlint": "node-swiftlint",
-    "docgen": "docgen --api VideoEditorPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
-    "clean": "rimraf ./dist",
-    "watch": "tsc --watch",
-    "prepublishOnly": "npm run build"
-  },
-  "devDependencies": {
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/core": "^7.0.0",
-    "@capacitor/docgen": "^0.3.0",
-    "@capacitor/ios": "^7.0.0",
-    "@ionic/eslint-config": "^0.4.0",
-    "@ionic/prettier-config": "^4.0.0",
-    "@ionic/swiftlint-config": "^2.0.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.4.2",
-    "prettier-plugin-java": "^2.6.6",
-    "rimraf": "^6.0.1",
-    "rollup": "^4.30.1",
-    "swiftlint": "^2.0.0",
-    "typescript": "~4.1.5"
-  },
-  "peerDependencies": {
-    "@capacitor/core": ">=7.0.0"
-  },
-  "prettier": "@ionic/prettier-config",
-  "swiftlint": "@ionic/swiftlint-config",
-  "eslintConfig": {
-    "extends": "@ionic/eslint-config/recommended"
-  },
   "capacitor": {
     "ios": {
       "src": "ios"
@@ -75,7 +7,77 @@
       "src": "android"
     }
   },
+  "main": "dist/plugin.cjs.js",
+  "version": "7.1.1",
+  "swiftlint": "@ionic/swiftlint-config",
   "engines": {
     "node": ">=16"
+  },
+  "eslintConfig": {
+    "extends": "@ionic/eslint-config/recommended"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dragermrb/capacitor-plugin-video-editor.git"
+  },
+  "name": "@whiteguru/capacitor-plugin-video-editor",
+  "bugs": {
+    "url": "https://github.com/dragermrb/capacitor-plugin-video-editor/issues"
+  },
+  "unpkg": "dist/plugin.js",
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "dist/",
+    "WhiteguruCapacitorPluginVideoEditor.podspec",
+    "ios/Sources",
+    "ios/Tests",
+    "Package.swift"
+  ],
+  "author": "Manuel Rodríguez",
+  "devDependencies": {
+    "@capacitor/docgen": "^0.3.0",
+    "swiftlint": "^2.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "prettier-plugin-java": "^2.6.6",
+    "prettier": "^3.4.2",
+    "typescript": "~4.1.5",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.30.1",
+    "@ionic/prettier-config": "^4.0.0",
+    "@ionic/swiftlint-config": "^2.0.0",
+    "eslint": "^8.57.0",
+    "@ionic/eslint-config": "^0.4.0",
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  },
+  "module": "dist/esm/index.js",
+  "scripts": {
+    "swiftlint": "node-swiftlint",
+    "docgen": "docgen --api VideoEditorPlugin --output-readme README.md --output-json dist/docs.json",
+    "verify:web": "npm run build",
+    "clean": "rimraf ./dist",
+    "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
+    "watch": "tsc --watch",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\" --plugin=prettier-plugin-java",
+    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
+    "prepublishOnly": "npm run build",
+    "verify:android": "cd android && ./gradlew clean build test && cd ..",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- autocorrect --format",
+    "eslint": "eslint . --ext ts",
+    "verify:ios": "xcodebuild -scheme WhiteguruCapacitorPluginVideoEditor -destination generic/platform=iOS"
+  },
+  "license": "MIT",
+  "types": "dist/esm/index.d.ts",
+  "description": "Capacitor plugin to edit videos",
+  "prettier": "@ionic/prettier-config",
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native"
+  ],
+  "peerDependencies": {
+    "@capacitor/core": ">=7.0.0"
   }
 }
