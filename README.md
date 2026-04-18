@@ -2,10 +2,17 @@
 
 Capacitor plugin to edit videos
 
-## Install (Capacitor 7.x)
+## Install (Capacitor 8.x)
 
 ```bash
 npm install @whiteguru/capacitor-plugin-video-editor
+npx cap sync
+```
+
+## Install (Capacitor 7.x)
+
+```bash
+npm install @whiteguru/capacitor-plugin-video-editor@^7.1.1
 npx cap sync
 ```
 
@@ -108,10 +115,10 @@ VideoEditor.thumbnail({
 
 <docgen-index>
 
-* [`edit(...)`](#edit)
-* [`thumbnail(...)`](#thumbnail)
-* [`addListener('transcodeProgress', ...)`](#addlistenertranscodeprogress-)
-* [Interfaces](#interfaces)
+- [`edit(...)`](#edit)
+- [`thumbnail(...)`](#thumbnail)
+- [`addListener('transcodeProgress', ...)`](#addlistenertranscodeprogress-)
+- [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -130,8 +137,7 @@ edit(options: EditOptions) => Promise<MediaFileResult>
 
 **Returns:** <code>Promise&lt;<a href="#mediafileresult">MediaFileResult</a>&gt;</code>
 
---------------------
-
+---
 
 ### thumbnail(...)
 
@@ -145,8 +151,7 @@ thumbnail(options: ThumbnailOptions) => Promise<MediaFileResult>
 
 **Returns:** <code>Promise&lt;<a href="#mediafileresult">MediaFileResult</a>&gt;</code>
 
---------------------
-
+---
 
 ### addListener('transcodeProgress', ...)
 
@@ -161,18 +166,15 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
 
---------------------
-
+---
 
 ### Interfaces
-
 
 #### MediaFileResult
 
 | Prop       | Type                                            |
 | ---------- | ----------------------------------------------- |
 | **`file`** | <code><a href="#mediafile">MediaFile</a></code> |
-
 
 #### MediaFile
 
@@ -183,7 +185,6 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`type`** | <code>string</code> | The file's mime type                            |
 | **`size`** | <code>number</code> | The size of the file, in bytes.                 |
 
-
 #### EditOptions
 
 | Prop            | Type                                                          |
@@ -192,14 +193,12 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`trim`**      | <code><a href="#trimoptions">TrimOptions</a></code>           |
 | **`transcode`** | <code><a href="#transcodeoptions">TranscodeOptions</a></code> |
 
-
 #### TrimOptions
 
 | Prop           | Type                | Description              |
 | -------------- | ------------------- | ------------------------ |
 | **`startsAt`** | <code>number</code> | StartsAt in milliseconds |
 | **`endsAt`**   | <code>number</code> | EndsAt in milliseconds   |
-
 
 #### TranscodeOptions
 
@@ -210,7 +209,6 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`keepAspectRatio`** | <code>boolean</code> | Keep Aspect Ratio, default `true` |
 | **`fps`**             | <code>number</code>  | Frames per second, default `30`   |
 
-
 #### ThumbnailOptions
 
 | Prop         | Type                | Description                                                          |
@@ -220,13 +218,11 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`width`**  | <code>number</code> |                                                                      |
 | **`height`** | <code>number</code> |                                                                      |
 
-
 #### PluginListenerHandle
 
 | Prop         | Type                                      |
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
-
 
 #### ProgressInfo
 

@@ -8,7 +8,7 @@
     }
   },
   "main": "dist/plugin.cjs.js",
-  "version": "7.1.1",
+  "version": "8.0.0",
   "swiftlint": "@ionic/swiftlint-config",
   "engines": {
     "node": ">=16"
@@ -36,20 +36,20 @@
   ],
   "author": "Manuel Rodríguez",
   "devDependencies": {
-    "@capacitor/docgen": "^0.3.0",
+    "@capacitor/docgen": "^0.3.1",
     "swiftlint": "^2.0.0",
-    "@capacitor/ios": "^7.0.0",
-    "prettier-plugin-java": "^2.6.6",
-    "prettier": "^3.4.2",
-    "typescript": "~4.1.5",
-    "rimraf": "^6.0.1",
-    "rollup": "^4.30.1",
+    "@capacitor/ios": "^8.0.0",
+    "prettier-plugin-java": "^2.7.7",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "rimraf": "^6.1.0",
+    "rollup": "^4.53.2",
     "@ionic/prettier-config": "^4.0.0",
     "@ionic/swiftlint-config": "^2.0.0",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "@ionic/eslint-config": "^0.4.0",
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/core": "^7.0.0"
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0"
   },
   "module": "dist/esm/index.js",
   "scripts": {
@@ -78,6 +78,6 @@
     "native"
   ],
   "peerDependencies": {
-    "@capacitor/core": ">=7.0.0"
+    "@capacitor/core": ">=8.0.0"
   }
 }
