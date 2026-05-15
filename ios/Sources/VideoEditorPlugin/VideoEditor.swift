@@ -16,7 +16,11 @@ import UIKit
         errorHandler: @escaping (String) -> ()
     ) {
         let avAsset = AVURLAsset(url: srcFile, options: nil)
-        let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).first!
+        guard let videoTrack = avAsset.tracks(withMediaType: AVMediaType.video).first else {
+            errorHandler("Source file has no video track or could not be decoded")
+            return
+        }
+
         let transformedVideoSize = videoTrack.naturalSize.applying(videoTrack.preferredTransform)
         let mediaSize = CGSize(width: abs(transformedVideoSize.width), height: abs(transformedVideoSize.height))
         
@@ -56,7 +60,11 @@ import UIKit
                 progressUpdater.cancel()
                 switch status {
                 case .completed:
-                    completionHandler(exporter.outputURL!)
+                    if let outputURL = exporter.outputURL {
+                        completionHandler(outputURL)
+                    } else {
+                        errorHandler("Export completed but outputURL is nil")
+                    }
                     break
                 case .failed:
                     errorHandler("Failed to transcode")
