@@ -6,10 +6,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.webkit.MimeTypeMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Logger;
 import com.getcapacitor.PermissionState;
@@ -19,25 +17,18 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.annotation.Permission;
 import com.getcapacitor.annotation.PermissionCallback;
-
-import com.linkedin.android.litr.analytics.TrackTransformationInfo;
 import com.linkedin.android.litr.TransformationListener;
-
+import com.linkedin.android.litr.analytics.TrackTransformationInfo;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.List;
+import java.util.Locale;
 
 @CapacitorPlugin(
-        name = "VideoEditor",
-        permissions = {
-                @Permission(
-                        strings = {Manifest.permission.READ_EXTERNAL_STORAGE},
-                        alias = VideoEditorPlugin.STORAGE
-                ),
-        }
+    name = "VideoEditor",
+    permissions = { @Permission(strings = { Manifest.permission.READ_EXTERNAL_STORAGE }, alias = VideoEditorPlugin.STORAGE) }
 )
 public class VideoEditorPlugin extends Plugin {
 
@@ -75,68 +66,70 @@ public class VideoEditorPlugin extends Plugin {
             String fileName = "VID_" + timeStamp + "_";
             File storageDir = getContext().getCacheDir();
 
-            execute(
-                    () -> {
-                        try {
-                            File outputFile = File.createTempFile(fileName, ".mp4", storageDir);
+            execute(() -> {
+                try {
+                    File outputFile = File.createTempFile(fileName, ".mp4", storageDir);
 
-                            VideoEditorLitr implementation = new VideoEditorLitr();
+                    VideoEditorLitr implementation = new VideoEditorLitr();
 
-                            TrimSettings trimSettings = new TrimSettings(trim.getInteger("startsAt", 0), trim.getInteger("endsAt", 0));
+                    TrimSettings trimSettings = new TrimSettings(trim.getInteger("startsAt", 0), trim.getInteger("endsAt", 0));
 
-                            TranscodeSettings transcodeSettings = new TranscodeSettings(
-                                    transcode.getInteger("height", 0),
-                                    transcode.getInteger("width", 0),
-                                    transcode.getBoolean("keepAspectRatio", true),
-                                    transcode.getInteger("fps", 30)
-                            );
+                    TranscodeSettings transcodeSettings = new TranscodeSettings(
+                        transcode.getInteger("height", 0),
+                        transcode.getInteger("width", 0),
+                        transcode.getBoolean("keepAspectRatio", true),
+                        transcode.getInteger("fps", 30)
+                    );
 
-                            TransformationListener videoTransformationListener = new TransformationListener() {
-                                @Override
-                                public void onStarted(@NonNull String id) {
-                                    Logger.debug("Transcode started");
-                                }
-
-                                @Override
-                                public void onProgress(@NonNull String id, float progress) {
-                                    Logger.debug("Transcode running " + progress);
-
-                                    JSObject ret = new JSObject();
-                                    ret.put("progress", progress);
-
-                                    notifyListeners("transcodeProgress", ret);
-                                }
-
-                                @Override
-                                public void onCompleted(@NonNull String id, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
-                                    Logger.debug("Transcode completed");
-
-                                    JSObject ret = new JSObject();
-                                    ret.put("file", createMediaFile(outputFile));
-                                    call.resolve(ret);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull String id, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
-                                    Logger.debug("Transcode cancelled");
-
-                                    call.reject("Transcode canceled");
-                                }
-
-                                @Override
-                                public void onError(@NonNull String id, @Nullable Throwable cause, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
-                                    Logger.debug("Transcode error: " + (cause != null ? cause.getMessage() : ""));
-
-                                    call.reject("Transcode failed: " + (cause != null ? cause.getMessage() : ""));
-                                }
-                            };
-
-                            implementation.edit(getContext(), inputFile, outputFile, trimSettings, transcodeSettings, videoTransformationListener);
-                        } catch (Exception e) {
-                            call.reject(e.getMessage());
+                    TransformationListener videoTransformationListener = new TransformationListener() {
+                        @Override
+                        public void onStarted(@NonNull String id) {
+                            Logger.debug("Transcode started");
                         }
-                    }
-            );
+
+                        @Override
+                        public void onProgress(@NonNull String id, float progress) {
+                            Logger.debug("Transcode running " + progress);
+
+                            JSObject ret = new JSObject();
+                            ret.put("progress", progress);
+
+                            notifyListeners("transcodeProgress", ret);
+                        }
+
+                        @Override
+                        public void onCompleted(@NonNull String id, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
+                            Logger.debug("Transcode completed");
+
+                            JSObject ret = new JSObject();
+                            ret.put("file", createMediaFile(outputFile));
+                            call.resolve(ret);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull String id, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
+                            Logger.debug("Transcode cancelled");
+
+                            call.reject("Transcode canceled");
+                        }
+
+                        @Override
+                        public void onError(
+                            @NonNull String id,
+                            @Nullable Throwable cause,
+                            @Nullable List<TrackTransformationInfo> trackTransformationInfos
+                        ) {
+                            Logger.debug("Transcode error: " + (cause != null ? cause.getMessage() : ""));
+
+                            call.reject("Transcode failed: " + (cause != null ? cause.getMessage() : ""));
+                        }
+                    };
+
+                    implementation.edit(getContext(), inputFile, outputFile, trimSettings, transcodeSettings, videoTransformationListener);
+                } catch (Exception e) {
+                    call.reject(e.getMessage());
+                }
+            });
         }
     }
 

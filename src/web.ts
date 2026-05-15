@@ -1,13 +1,7 @@
 import { WebPlugin } from '@capacitor/core';
 import type { PluginListenerHandle } from '@capacitor/core/types/definitions';
 
-import type {
-  EditOptions,
-  MediaFileResult,
-  ProgressInfo,
-  ThumbnailOptions,
-  VideoEditorPlugin,
-} from './definitions';
+import type { EditOptions, MediaFileResult, ProgressInfo, ThumbnailOptions, VideoEditorPlugin } from './definitions';
 
 export class VideoEditorWeb extends WebPlugin implements VideoEditorPlugin {
   edit(options: EditOptions): Promise<MediaFileResult> {

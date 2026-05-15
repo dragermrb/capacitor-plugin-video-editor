@@ -1,6 +1,7 @@
 package com.whiteguru.capacitor.plugin.videoeditor.dto;
 
 public class VideoSize {
+
     public int width;
     public int height;
 
@@ -11,9 +12,6 @@ public class VideoSize {
 
     @Override
     public String toString() {
-        return "VideoSize{" +
-                "width=" + width +
-                ", height=" + height +
-                '}';
+        return "VideoSize{" + "width=" + width + ", height=" + height + '}';
     }
 }

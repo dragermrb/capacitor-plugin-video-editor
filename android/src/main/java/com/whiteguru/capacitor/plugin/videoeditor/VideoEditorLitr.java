@@ -7,10 +7,8 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.getcapacitor.Logger;
 import com.linkedin.android.litr.MediaTransformer;
 import com.linkedin.android.litr.TransformationListener;
@@ -21,7 +19,6 @@ import com.whiteguru.capacitor.plugin.videoeditor.dto.MediaTrackFormat;
 import com.whiteguru.capacitor.plugin.videoeditor.dto.SourceMedia;
 import com.whiteguru.capacitor.plugin.videoeditor.dto.VideoSize;
 import com.whiteguru.capacitor.plugin.videoeditor.dto.VideoTrackFormat;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,7 +51,7 @@ public class VideoEditorLitr {
                 String mime = format.getString(MediaFormat.KEY_MIME);
                 if (mime != null && mime.startsWith("audio/")) {
                     if (format.containsKey(MediaFormat.KEY_BIT_RATE)) {
-                        return Math.min(DEFAULT_AUDIO_BITRATE,format.getInteger(MediaFormat.KEY_BIT_RATE)); // bps
+                        return Math.min(DEFAULT_AUDIO_BITRATE, format.getInteger(MediaFormat.KEY_BIT_RATE)); // bps
                     }
                     return DEFAULT_AUDIO_BITRATE; // not reported (common for some VBR / containers)
                 }
@@ -65,7 +62,14 @@ public class VideoEditorLitr {
         }
     }
 
-    public void edit(Context context, File srcFile, File outFile, TrimSettings trimSettings, TranscodeSettings transcodeSettings, TransformationListener videoTransformationListener) throws IOException {
+    public void edit(
+        Context context,
+        File srcFile,
+        File outFile,
+        TrimSettings trimSettings,
+        TranscodeSettings transcodeSettings,
+        TransformationListener videoTransformationListener
+    ) throws IOException {
         MediaTransformer mediaTransformer = new MediaTransformer(context);
 
         String requestId = UUID.randomUUID().toString();
@@ -80,21 +84,21 @@ public class VideoEditorLitr {
         VideoSize targetVideoSize = calculateTargetVideoSize(videoTracks.get(0), transcodeSettings);
         Logger.debug("Source video size: " + (new VideoSize(videoTracks.get(0).width, videoTracks.get(0).height)));
         Logger.debug("Target video size: " + targetVideoSize);
-        int estimatedVideoBitrate= (int) estimateVideoBitRate(targetVideoSize.width, targetVideoSize.height, transcodeSettings.getFps());
+        int estimatedVideoBitrate = (int) estimateVideoBitRate(targetVideoSize.width, targetVideoSize.height, transcodeSettings.getFps());
         int originalVideoBitrate = videoTracks.get(0).bitrate;
 
-        int targetVideoBitrate = Math.min(estimatedVideoBitrate,originalVideoBitrate);
-        int targetAudioBitrate = getTargetAudioBitrate(context,sourceVideoUri);
+        int targetVideoBitrate = Math.min(estimatedVideoBitrate, originalVideoBitrate);
+        int targetAudioBitrate = getTargetAudioBitrate(context, sourceVideoUri);
 
         // Trim
         long startsAtUs = trimSettings.getStartsAt() * 1000;
         long endsAtUs = trimSettings.getEndsAt() == 0 ? Long.MAX_VALUE : trimSettings.getEndsAt() * 1000;
 
         TransformationOptions transformationOptions = new TransformationOptions.Builder()
-                .setGranularity(MediaTransformer.GRANULARITY_DEFAULT)
-                .setSourceMediaRange(new MediaRange(startsAtUs, endsAtUs))
-                .setRemoveMetadata(true)
-                .build();
+            .setGranularity(MediaTransformer.GRANULARITY_DEFAULT)
+            .setSourceMediaRange(new MediaRange(startsAtUs, endsAtUs))
+            .setRemoveMetadata(true)
+            .build();
 
         // Video codec config
         MediaFormat targetVideoFormat = new MediaFormat();
@@ -105,7 +109,6 @@ public class VideoEditorLitr {
         targetVideoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, DEFAULT_VIDEO_KEY_FRAME_INTERVAL);
         targetVideoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
         targetVideoFormat.setInteger(MediaFormat.KEY_BIT_RATE, targetVideoBitrate);
-
 
         // Audio codec config
         MediaFormat targetAudioFormat = new MediaFormat();
@@ -140,7 +143,11 @@ public class VideoEditorLitr {
             }
 
             @Override
-            public void onError(@NonNull String id, @Nullable Throwable cause, @Nullable List<TrackTransformationInfo> trackTransformationInfos) {
+            public void onError(
+                @NonNull String id,
+                @Nullable Throwable cause,
+                @Nullable List<TrackTransformationInfo> trackTransformationInfos
+            ) {
                 videoTransformationListener.onError(id, cause, trackTransformationInfos);
 
                 mediaTransformer.release();
@@ -148,18 +155,17 @@ public class VideoEditorLitr {
         };
 
         mediaTransformer.transform(
-                requestId,
-                sourceVideoUri,
-                targetVideoFilePath,
-                targetVideoFormat,
-                targetAudioFormat,
-                listener,
-                transformationOptions
+            requestId,
+            sourceVideoUri,
+            targetVideoFilePath,
+            targetVideoFormat,
+            targetAudioFormat,
+            listener,
+            transformationOptions
         );
     }
 
     public void thumbnail(Context context, Uri srcUri, File outFile, int atMs, int width, int height) throws IOException {
-
         int quality = 80;
 
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -186,17 +192,15 @@ public class VideoEditorLitr {
 
     private VideoSize calculateTargetVideoSize(VideoTrackFormat videoTrackFormat, TranscodeSettings transcodeSettings) {
         if (transcodeSettings.isKeepAspectRatio()) {
-            int mostSize = transcodeSettings.getWidth() == 0 && transcodeSettings.getHeight() == 0
+            int mostSize =
+                transcodeSettings.getWidth() == 0 && transcodeSettings.getHeight() == 0
                     ? 1280
                     : Math.max(transcodeSettings.getWidth(), transcodeSettings.getHeight());
 
             return calculateVideoSizeAtMost(videoTrackFormat, mostSize);
         } else {
             if (transcodeSettings.getWidth() > 0 && transcodeSettings.getHeight() > 0) {
-                return new VideoSize(
-                        transcodeSettings.getWidth(),
-                        transcodeSettings.getHeight()
-                );
+                return new VideoSize(transcodeSettings.getWidth(), transcodeSettings.getHeight());
             } else {
                 return calculateVideoSizeAtMost(videoTrackFormat, 720);
             }

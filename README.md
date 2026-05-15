@@ -115,10 +115,10 @@ VideoEditor.thumbnail({
 
 <docgen-index>
 
-- [`edit(...)`](#edit)
-- [`thumbnail(...)`](#thumbnail)
-- [`addListener('transcodeProgress', ...)`](#addlistenertranscodeprogress-)
-- [Interfaces](#interfaces)
+* [`edit(...)`](#edit)
+* [`thumbnail(...)`](#thumbnail)
+* [`addListener('transcodeProgress', ...)`](#addlistenertranscodeprogress-)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -128,30 +128,32 @@ VideoEditor.thumbnail({
 ### edit(...)
 
 ```typescript
-edit(options: EditOptions) => Promise<MediaFileResult>
+edit(options: EditOptions) => any
 ```
 
 | Param         | Type                                                |
 | ------------- | --------------------------------------------------- |
 | **`options`** | <code><a href="#editoptions">EditOptions</a></code> |
 
-**Returns:** <code>Promise&lt;<a href="#mediafileresult">MediaFileResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
----
+--------------------
+
 
 ### thumbnail(...)
 
 ```typescript
-thumbnail(options: ThumbnailOptions) => Promise<MediaFileResult>
+thumbnail(options: ThumbnailOptions) => any
 ```
 
 | Param         | Type                                                          |
 | ------------- | ------------------------------------------------------------- |
 | **`options`** | <code><a href="#thumbnailoptions">ThumbnailOptions</a></code> |
 
-**Returns:** <code>Promise&lt;<a href="#mediafileresult">MediaFileResult</a>&gt;</code>
+**Returns:** <code>any</code>
 
----
+--------------------
+
 
 ### addListener('transcodeProgress', ...)
 
@@ -164,26 +166,13 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`eventName`**    | <code>'transcodeProgress'</code>                                         |
 | **`listenerFunc`** | <code>(info: <a href="#progressinfo">ProgressInfo</a>) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>any</code>
 
----
+--------------------
+
 
 ### Interfaces
 
-#### MediaFileResult
-
-| Prop       | Type                                            |
-| ---------- | ----------------------------------------------- |
-| **`file`** | <code><a href="#mediafile">MediaFile</a></code> |
-
-#### MediaFile
-
-| Prop       | Type                | Description                                     |
-| ---------- | ------------------- | ----------------------------------------------- |
-| **`name`** | <code>string</code> | The name of the file, without path information. |
-| **`path`** | <code>string</code> | The full path of the file, including the name.  |
-| **`type`** | <code>string</code> | The file's mime type                            |
-| **`size`** | <code>number</code> | The size of the file, in bytes.                 |
 
 #### EditOptions
 
@@ -193,12 +182,14 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`trim`**      | <code><a href="#trimoptions">TrimOptions</a></code>           |
 | **`transcode`** | <code><a href="#transcodeoptions">TranscodeOptions</a></code> |
 
+
 #### TrimOptions
 
 | Prop           | Type                | Description              |
 | -------------- | ------------------- | ------------------------ |
 | **`startsAt`** | <code>number</code> | StartsAt in milliseconds |
 | **`endsAt`**   | <code>number</code> | EndsAt in milliseconds   |
+
 
 #### TranscodeOptions
 
@@ -209,6 +200,24 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`keepAspectRatio`** | <code>boolean</code> | Keep Aspect Ratio, default `true` |
 | **`fps`**             | <code>number</code>  | Frames per second, default `30`   |
 
+
+#### MediaFileResult
+
+| Prop       | Type                                            |
+| ---------- | ----------------------------------------------- |
+| **`file`** | <code><a href="#mediafile">MediaFile</a></code> |
+
+
+#### MediaFile
+
+| Prop       | Type                | Description                                     |
+| ---------- | ------------------- | ----------------------------------------------- |
+| **`name`** | <code>string</code> | The name of the file, without path information. |
+| **`path`** | <code>string</code> | The full path of the file, including the name.  |
+| **`type`** | <code>string</code> | The file's mime type                            |
+| **`size`** | <code>number</code> | The size of the file, in bytes.                 |
+
+
 #### ThumbnailOptions
 
 | Prop         | Type                | Description                                                          |
@@ -218,16 +227,18 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 | **`width`**  | <code>number</code> |                                                                      |
 | **`height`** | <code>number</code> |                                                                      |
 
-#### PluginListenerHandle
-
-| Prop         | Type                                      |
-| ------------ | ----------------------------------------- |
-| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 #### ProgressInfo
 
 | Prop           | Type                |
 | -------------- | ------------------- |
 | **`progress`** | <code>number</code> |
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                      |
+| ------------ | ------------------------- |
+| **`remove`** | <code>() =&gt; any</code> |
 
 </docgen-api>

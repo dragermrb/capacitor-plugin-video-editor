@@ -8,12 +8,9 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
-
 import com.linkedin.android.litr.utils.MediaFormatUtils;
 import com.linkedin.android.litr.utils.TranscoderUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +71,7 @@ public class SourceMedia {
         }
     }
 
-    public List<VideoTrackFormat> getVideoTracks(){
+    public List<VideoTrackFormat> getVideoTracks() {
         List<VideoTrackFormat> videoTracks = new ArrayList<>();
 
         for (MediaTrackFormat track : tracks) {

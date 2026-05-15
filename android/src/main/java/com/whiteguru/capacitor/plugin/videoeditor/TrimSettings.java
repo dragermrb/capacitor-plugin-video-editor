@@ -1,11 +1,11 @@
 package com.whiteguru.capacitor.plugin.videoeditor;
 
 public class TrimSettings {
+
     private long startsAt = 0;
     private long endsAt = 0;
 
-    public TrimSettings() {
-    }
+    public TrimSettings() {}
 
     public TrimSettings(long startsAt, long endsAt) {
         if (startsAt < 0) {

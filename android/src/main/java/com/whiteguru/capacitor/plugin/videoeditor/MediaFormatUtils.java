@@ -1,10 +1,10 @@
 package com.whiteguru.capacitor.plugin.videoeditor;
 
 import android.media.MediaFormat;
-
 import androidx.annotation.NonNull;
 
 public class MediaFormatUtils {
+
     public static int getInt(@NonNull MediaFormat mediaFormat, @NonNull String key) {
         return getInt(mediaFormat, key, -1);
     }

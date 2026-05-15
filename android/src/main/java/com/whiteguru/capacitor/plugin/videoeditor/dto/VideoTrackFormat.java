@@ -3,6 +3,7 @@ package com.whiteguru.capacitor.plugin.videoeditor.dto;
 import androidx.annotation.NonNull;
 
 public class VideoTrackFormat extends MediaTrackFormat {
+
     public int width;
     public int height;
     public int bitrate;
