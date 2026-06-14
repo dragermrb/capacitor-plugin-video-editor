@@ -9,6 +9,7 @@
   },
   "main": "dist/plugin.cjs.js",
   "version": "8.0.2",
+  "homepage": "https://github.com/dragermrb/capacitor-plugin-video-editor",
   "swiftlint": "@ionic/swiftlint-config",
   "engines": {
     "node": ">=16"
