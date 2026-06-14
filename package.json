@@ -34,7 +34,7 @@
     "ios/Tests",
     "Package.swift"
   ],
-  "author": "Manuel Rodríguez",
+  "author": "Manuel Rodr\u00edguez",
   "devDependencies": {
     "@capacitor/android": "^8.3.4",
     "@capacitor/core": "^8.3.4",
@@ -80,5 +80,6 @@
   ],
   "peerDependencies": {
     "@capacitor/core": ">=8.0.0"
-  }
+  },
+  "homepage": "git+https://github.com/dragermrb/capacitor-plugin-video-editor#readme"
 }
