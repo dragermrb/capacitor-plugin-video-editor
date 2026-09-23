@@ -126,7 +126,10 @@ extension SimpleSessionExporter {
         videoComposition.instructions = [instruction]
 
         let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: compositionTrack)
-        layerInstruction.setTransform(asset.scaleTransform(scaleFactor: scale), at: CMTime.zero)
+        layerInstruction.setTransform(
+            assetTrack.preferredTransform.concatenating(CGAffineTransform(scaleX: scale, y: scale)),
+            at: CMTime.zero
+        )
 
         instruction.layerInstructions = [layerInstruction]
 
