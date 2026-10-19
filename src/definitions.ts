@@ -45,7 +45,15 @@ export interface ThumbnailOptions {
    * The time position where the frame will be retrieved in milliseconds.
    */
   at?: number;
+  /**
+   * Maximum width of the output thumbnail in pixels.
+   * The frame is scaled to fit within `width` and `height` while preserving its aspect ratio.
+   */
   width?: number;
+  /**
+   * Maximum height of the output thumbnail in pixels.
+   * The frame is scaled to fit within `width` and `height` while preserving its aspect ratio.
+   */
   height?: number;
 }
 

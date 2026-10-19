@@ -169,25 +169,40 @@ public class VideoEditorLitr {
         int quality = 80;
 
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(context, srcUri);
+        try {
+            mmr.setDataSource(context, srcUri);
 
-        Bitmap bitmap = mmr.getFrameAtTime((long) atMs * 1000);
+            Bitmap bitmap = mmr.getFrameAtTime((long) atMs * 1000);
+            if (bitmap == null) {
+                throw new IOException("Failed to retrieve frame at " + atMs + "ms");
+            }
 
-        if (width > 0 || height > 0) {
-            int videoWidth = bitmap.getWidth();
-            int videoHeight = bitmap.getHeight();
-            double aspectRatio = (double) videoWidth / (double) videoHeight;
+            if (width > 0 || height > 0) {
+                int videoWidth = bitmap.getWidth();
+                int videoHeight = bitmap.getHeight();
 
-            int scaleWidth = Double.valueOf(height * aspectRatio).intValue();
-            int scaleHeight = Double.valueOf(scaleWidth / aspectRatio).intValue();
+                double widthRatio = width > 0 ? (double) width / videoWidth : Double.POSITIVE_INFINITY;
+                double heightRatio = height > 0 ? (double) height / videoHeight : Double.POSITIVE_INFINITY;
+                double scale = Math.min(widthRatio, heightRatio);
 
-            final Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, scaleWidth, scaleHeight, false);
-            bitmap.recycle();
-            bitmap = resizedBitmap;
+                int scaleWidth = Math.max(1, (int) Math.round(videoWidth * scale));
+                int scaleHeight = Math.max(1, (int) Math.round(videoHeight * scale));
+
+                if (scaleWidth != videoWidth || scaleHeight != videoHeight) {
+                    final Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, scaleWidth, scaleHeight, true);
+                    bitmap.recycle();
+                    bitmap = resizedBitmap;
+                }
+            }
+
+            try (OutputStream outStream = new FileOutputStream(outFile)) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
+            } finally {
+                bitmap.recycle();
+            }
+        } finally {
+            mmr.release();
         }
-
-        OutputStream outStream = new FileOutputStream(outFile);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
     }
 
     private VideoSize calculateTargetVideoSize(VideoTrackFormat videoTrackFormat, TranscodeSettings transcodeSettings) {

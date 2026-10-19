@@ -220,12 +220,12 @@ addListener(eventName: 'transcodeProgress', listenerFunc: (info: ProgressInfo) =
 
 #### ThumbnailOptions
 
-| Prop         | Type                | Description                                                          |
-| ------------ | ------------------- | -------------------------------------------------------------------- |
-| **`path`**   | <code>string</code> |                                                                      |
-| **`at`**     | <code>number</code> | The time position where the frame will be retrieved in milliseconds. |
-| **`width`**  | <code>number</code> |                                                                      |
-| **`height`** | <code>number</code> |                                                                      |
+| Prop         | Type                | Description                                                                                                                                 |
+| ------------ | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`path`**   | <code>string</code> |                                                                                                                                             |
+| **`at`**     | <code>number</code> | The time position where the frame will be retrieved in milliseconds.                                                                        |
+| **`width`**  | <code>number</code> | Maximum width of the output thumbnail in pixels. The frame is scaled to fit within `width` and `height` while preserving its aspect ratio.  |
+| **`height`** | <code>number</code> | Maximum height of the output thumbnail in pixels. The frame is scaled to fit within `width` and `height` while preserving its aspect ratio. |
 
 
 #### ProgressInfo

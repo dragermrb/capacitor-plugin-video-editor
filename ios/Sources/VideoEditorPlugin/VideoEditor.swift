@@ -85,79 +85,32 @@ import UIKit
         let imgGenerator = AVAssetImageGenerator(asset: asset)
         imgGenerator.appliesPreferredTrackTransform = true
 
-        var cgImage: CGImage
-
-        if #available(iOS 16, *) {
-            cgImage = try await imgGenerator.image(
-                at: min(
-                    asset.duration,
-                    CMTimeMake(value: Int64(atMs), timescale: 1000)
-                )
-            ).image
-        } else {
-            // Fallback on earlier versions
-            cgImage = try imgGenerator.copyCGImage(
-                at: min(
-                    asset.duration,
-                    CMTimeMake(value: Int64(atMs), timescale: 1000)
-                ),
-                actualTime: nil
+        if width > 0 || height > 0 {
+            imgGenerator.maximumSize = CGSize(
+                width: width > 0 ? CGFloat(width) : .greatestFiniteMagnitude,
+                height: height > 0 ? CGFloat(height) : .greatestFiniteMagnitude
             )
         }
 
-        let thumbnail = cropToBounds(
-            image: UIImage(cgImage: cgImage),
-            width: Double(width),
-            height: Double(height)
+        let time = min(
+            asset.duration,
+            CMTimeMake(value: Int64(atMs), timescale: 1000)
         )
+
+        let cgImage: CGImage
+
+        if #available(iOS 16, *) {
+            cgImage = try await imgGenerator.image(at: time).image
+        } else {
+            // Fallback on earlier versions
+            cgImage = try imgGenerator.copyCGImage(at: time, actualTime: nil)
+        }
+
+        let thumbnail = UIImage(cgImage: cgImage)
 
         if let data = thumbnail.jpegData(compressionQuality: 0.8) {
             try data.write(to: outFile)
         }
-    }
-
-    func cropToBounds(image: UIImage, width: Double? = nil, height: Double? = nil) -> UIImage {
-        let cgimage = image.cgImage!
-        let contextImage: UIImage = UIImage(cgImage: cgimage)
-        let contextSize: CGSize = contextImage.size
-
-        // Calculate the aspect ratio based on the provided width and height if available,
-        // or use contextSize.width and contextSize.height as defaults.
-        let aspectRatio: CGFloat
-        if let w = width, let h = height {
-            if w > 0 && h > 0 {
-                aspectRatio = CGFloat(w / h)
-            } else {
-                aspectRatio = contextSize.width / contextSize.height
-            }
-        } else {
-            aspectRatio = contextSize.width / contextSize.height
-        }
-
-        var posX: CGFloat = 0.0
-        var posY: CGFloat = 0.0
-        var cgwidth: CGFloat = contextSize.width
-        var cgheight: CGFloat = contextSize.height
-
-        // Calculate the new dimensions while preserving the aspect ratio
-        if contextSize.width / aspectRatio > contextSize.height {
-            cgwidth = contextSize.height * aspectRatio
-        } else {
-            cgheight = contextSize.width / aspectRatio
-        }
-
-        posX = (contextSize.width - cgwidth) / 2
-        posY = (contextSize.height - cgheight) / 2
-
-        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
-
-        // Create bitmap image from context using the rect
-        let imageRef: CGImage = cgimage.cropping(to: rect)!
-
-        // Create a new image based on the imageRef and rotate back to the original orientation
-        let image: UIImage = UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
-
-        return image
     }
 
     func getOrientationForTrack(avAsset: AVAsset) -> String {
